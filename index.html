@@ -221,17 +221,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .fin-goal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;position:relative;overflow:hidden}
 .fin-goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green2))}
 
-/* TEXTS */
-.gmail-setup-card{background:linear-gradient(135deg,#0d1828,#131a28);border:1px solid #2a3a5a;border-radius:var(--radius);padding:28px;text-align:center}
-.text-list{display:flex;flex-direction:column;gap:8px}
-.text-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 16px;display:flex;align-items:flex-start;gap:12px}
-.text-item.overdue{border-color:var(--red)}
-.text-item.soon{border-color:var(--gold)}
-.text-body{flex:1;min-width:0}
-.text-to{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
-.text-msg{font-size:13px;line-height:1.5;margin-bottom:6px;overflow-wrap:break-word;word-break:break-word}
-.text-sched{font-size:11px;color:var(--muted)}
-
 /* BOTTOM NAV (mobile only) */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:200;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom,0)}
 .bottom-nav::-webkit-scrollbar{display:none}
@@ -300,7 +289,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <button class="nav-btn" onclick="switchView('ideas')" data-view="ideas"><span>💡</span><span class="tooltip">Ideas</span></button>
   <button class="nav-btn" onclick="switchView('finance')" data-view="finance"><span>💰</span><span class="tooltip">Finance</span></button>
   <button class="nav-btn" onclick="switchView('alfred')" data-view="alfred"><span>🎩</span><span class="tooltip">Alfred</span></button>
-  <button class="nav-btn" onclick="switchView('texts')" data-view="texts"><span>📨</span><span class="tooltip">Texts</span></button>
 </nav>
 
 <!-- BOTTOM NAV (mobile) -->
@@ -314,7 +302,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <button class="bnav-btn" onclick="switchView('social')" data-bview="social"><span class="bi">📱</span>Social</button>
     <button class="bnav-btn" onclick="switchView('ideas')" data-bview="ideas"><span class="bi">💡</span>Ideas</button>
     <button class="bnav-btn" onclick="switchView('finance')" data-bview="finance"><span class="bi">💰</span>Finance</button>
-    <button class="bnav-btn" onclick="switchView('texts')" data-bview="texts"><span class="bi">📨</span>Texts</button>
   </div>
 </nav>
 
@@ -520,40 +507,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <div id="fin-content"></div>
 </div>
 
-<!-- TEXTS -->
-<div id="view-texts" class="view">
-  <div class="flex-between">
-    <div>
-      <div style="font-size:20px;font-weight:800">Texts</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">Send free texts from your Google Voice number.</div>
-    </div>
-    <div class="flex gap8">
-      <button class="btn btn-ghost btn-sm" onclick="openTextSetup()">⚙ Setup</button>
-      <button class="btn btn-gold" onclick="openTextModal()">+ New Text</button>
-    </div>
-  </div>
-  <!-- Auth status card -->
-  <div id="text-auth-card"></div>
-  <!-- Note about scheduling -->
-  <div class="card-sm" style="border-color:#2a3a5a;font-size:12px;color:var(--muted);line-height:1.6">
-    💡 <strong style="color:var(--muted2)">How it works:</strong> Texts are sent as emails to <code style="background:var(--surface2);padding:1px 5px;border-radius:4px">[number]@txt.voice.google.com</code> via your Gmail — Google Voice delivers them as real texts from your GV number. The app must be open to auto-send scheduled texts. You can also tap <strong>Send</strong> manually any time.
-  </div>
-  <!-- Scheduled queue -->
-  <div class="card">
-    <div class="flex-between" style="margin-bottom:12px">
-      <div class="section-title" style="margin:0">Scheduled</div>
-      <span id="text-queue-count" class="tag tag-gold">0</span>
-    </div>
-    <div id="text-scheduled-list" class="text-list"></div>
-    <div id="text-scheduled-empty" style="display:none;text-align:center;padding:16px;color:var(--muted);font-size:13px">No scheduled texts. Tap "+ New Text" to compose one.</div>
-  </div>
-  <!-- Sent history -->
-  <div class="card">
-    <div class="section-title">Sent History</div>
-    <div id="text-sent-list" class="text-list"></div>
-    <div id="text-sent-empty" style="display:none;text-align:center;padding:16px;color:var(--muted);font-size:13px">No texts sent yet.</div>
-  </div>
-</div>
 
 </div><!-- end .app -->
 
@@ -862,69 +815,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   </div>
 </div>
 
-<!-- Text Compose Modal -->
-<div class="modal-overlay" id="text-modal" onclick="if(event.target===this)closeModal('text-modal')">
-  <div class="modal">
-    <div class="modal-title" id="text-modal-title">Schedule Text</div>
-    <input type="hidden" id="txt-id">
-    <div style="margin-bottom:10px">
-      <label>To — Phone Number</label>
-      <div class="flex gap8">
-        <input id="txt-phone" type="tel" placeholder="(XXX) XXX-XXXX" style="flex:1">
-        <select id="txt-contact" onchange="fillTextPhone()" style="flex:1">
-          <option value="">From Network</option>
-        </select>
-      </div>
-    </div>
-    <div style="margin-bottom:10px">
-      <label>Message</label>
-      <textarea id="txt-msg" placeholder="Your message..." style="min-height:100px"></textarea>
-    </div>
-    <div class="modal-row" id="txt-time-row">
-      <div><label>Send Date</label><input id="txt-date" type="date"></div>
-      <div><label>Send Time</label><input id="txt-time" type="time"></div>
-    </div>
-    <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-      <input type="checkbox" id="txt-now" style="width:auto;accent-color:var(--gold)" onchange="toggleTxtNow()">
-      <label style="margin:0;cursor:pointer;font-size:13px" for="txt-now">Send immediately when I tap Save</label>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="txt-delete-btn" onclick="deleteScheduledText()" style="display:none;margin-right:auto;color:var(--red)">Delete</button>
-      <button class="btn btn-ghost" onclick="closeModal('text-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveScheduledText()">Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Text Setup Modal -->
-<div class="modal-overlay" id="text-setup-modal" onclick="if(event.target===this)closeModal('text-setup-modal')">
-  <div class="modal">
-    <div class="modal-title">📨 Text Setup</div>
-    <p style="font-size:13px;color:var(--muted2);margin-bottom:16px;line-height:1.6">Connect Gmail to send texts from your Google Voice number for free. You'll need a Google OAuth Client ID — it takes about 5 minutes to set up.</p>
-    <div style="margin-bottom:12px">
-      <label>Your Google Voice Number</label>
-      <input id="setup-gv-phone" type="tel" placeholder="(864) 334-6982">
-    </div>
-    <div style="margin-bottom:6px">
-      <label>Google OAuth Client ID</label>
-      <input id="setup-client-id" type="text" placeholder="1234567890.apps.googleusercontent.com">
-    </div>
-    <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:20px;padding:10px;background:var(--surface2);border-radius:8px">
-      <strong style="color:var(--muted2)">Setup steps (free, 5 min):</strong><br>
-      1. Go to <strong>console.cloud.google.com</strong><br>
-      2. Create a project → Enable <strong>Gmail API</strong><br>
-      3. OAuth consent screen → External → your email<br>
-      4. Credentials → Create → OAuth 2.0 Client ID → Web app<br>
-      5. Add this page's URL to Authorized JavaScript Origins<br>
-      6. Copy the Client ID here
-    </div>
-    <div class="modal-actions" style="flex-direction:column;gap:8px">
-      <button class="btn btn-gold" style="width:100%" onclick="saveTextSetup()">Save & Connect Google</button>
-      <button class="btn btn-ghost" style="width:100%" onclick="closeModal('text-setup-modal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <!-- Network Touch Modal -->
 <div class="modal-overlay" id="touch-modal" onclick="if(event.target===this)closeModal('touch-modal')">
   <div class="modal">
@@ -952,7 +842,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <script>
 // ===== DATA =====
 const KEY='batCave2';
-function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},texts:{scheduled:[],sent:[]},gmailClientId:'',gvPhone:'',apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth()}}
+function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth()}}
 var data=JSON.parse(localStorage.getItem(KEY)||'null')||def();
 function save(){localStorage.setItem(KEY,JSON.stringify(data));clearTimeout(window._sbTimer);window._sbTimer=setTimeout(()=>sbPush(data),2000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -970,7 +860,7 @@ function switchView(v){
   renders[v]&&renders[v]();
   window.scrollTo(0,0);
 }
-const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,social:renderSocial,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,alfred:renderAlfred,texts:renderTexts};
+const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,social:renderSocial,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,alfred:renderAlfred};
 
 // ===== MODAL =====
 function openModal(id){document.getElementById(id).classList.add('active')}
@@ -1741,7 +1631,6 @@ Possible intents:
 - network: Add a network contact. Fields: {intent:"network", name:"...", company:"...", phone:"...", type:"Client|Prospect|Mentor|Partner|Friend|Referral Source"}
 - touch: Log a touch for an existing contact. Fields: {intent:"touch", name:"...", touchType:"Call|Text|Email|LinkedIn|In Person|Other", note:"..."}
 - post: Save a social media post idea. Fields: {intent:"post", platform:"Instagram|Facebook|LinkedIn|TikTok", content:"..."}
-- text: Send or schedule a text via Google Voice. Fields: {intent:"text", name:"contact name to look up", phone:"digits only if explicitly stated", message:"the message body", sendNow:true, date:"YYYY-MM-DD"(if scheduling for later), time:"HH:MM"(if scheduling for later)}. If user says "text [name] [message]" sendNow=true. If user says "schedule a text to [name] at [time]" set sendNow=false with date/time.
 - unknown: Can't parse. Fields: {intent:"unknown"}
 
 Today's date is ${today()}. If a date is mentioned like "tomorrow", calculate it. If no date given for events, use today.`;
@@ -1771,11 +1660,6 @@ function processVoiceRuleBased(text){
   else if(t.includes('event')||t.includes('meeting')||t.includes('schedule')){parsed={intent:'event',title:text.replace(/add (an )?event|schedule a?|new meeting/gi,'').trim(),date:today()}}
   else if(t.includes('contact')||t.includes('network')){parsed={intent:'network',name:text.replace(/add (a )?contact|add to network/gi,'').trim(),company:'',phone:'',type:'Contact'}}
   else if(t.includes('post')||t.includes('instagram')||t.includes('linkedin')){parsed={intent:'post',platform:'Instagram',content:text}}
-  else if(t.startsWith('text ')||t.includes('send a text')||t.includes('send text')){
-    const afterText=text.replace(/^text\s+|send\s+(a\s+)?text\s+(to\s+)?/i,'');
-    const words=afterText.trim().split(' ');
-    parsed={intent:'text',name:words[0]||'',message:words.slice(1).join(' ')||'',sendNow:true};
-  }
   executeVoiceCommand(parsed,text);
 }
 
@@ -1826,31 +1710,8 @@ function executeVoiceCommand(cmd,originalText){
       data.posts.unshift({id:uid(),platform:cmd.platform||'Instagram',type:'Post Caption',content:cmd.content,posted:false,createdAt:today()});
       save();if(document.getElementById('view-social').classList.contains('active'))renderPostQueue();
       showVoiceToast(originalText,'📱 Post saved to queue.','success');break;}
-    case 'text':{
-      if(!cmd.message){showVoiceToast(originalText,"Couldn't understand the message.",'error');return}
-      let txPhone=cmd.phone||'';
-      let txName=cmd.name||'';
-      if(cmd.name&&!txPhone){
-        const match=(data.network||[]).find(c=>c.name.toLowerCase().includes(cmd.name.toLowerCase()));
-        if(match&&match.phone){txPhone=match.phone;txName=match.name;}
-      }
-      if(!txPhone){showVoiceToast(originalText,(cmd.name?'"'+cmd.name+'" has no phone in Network. ':'')+'Say the number or add it first.','error');return}
-      const sendNow=cmd.sendNow!==false;
-      const sendAt=sendNow?new Date().toISOString():`${cmd.date||today()}T${cmd.time||'09:00'}:00`;
-      const t=textsData();
-      const tx={id:uid(),toPhone:txPhone,toName:txName,message:cmd.message,sendAt,createdAt:new Date().toISOString()};
-      t.scheduled.push(tx);
-      save();
-      if(sendNow&&_gmailToken&&Date.now()<_gmailTokenExp){
-        showVoiceToast(originalText,'📨 Sending to '+txName+'...','success');
-        sendTextNow(tx.id);
-      }else{
-        if(document.getElementById('view-texts').classList.contains('active'))renderTexts();
-        showVoiceToast(originalText,'📨 Text '+(sendNow?'saved — connect Gmail to send':'scheduled for '+fmtDateTime(sendAt))+' → '+txName,'success');
-      }
-      break;}
     default:
-      showVoiceToast(originalText,"Didn't catch that. Try: \"Text Russell hey, checking in\" or \"Add focus send emails\"",'error');
+      showVoiceToast(originalText,"Didn't catch that. Try: \"Add focus send emails\" or \"Log win closed a client\"",'error');
   }
 }
 
@@ -2104,263 +1965,6 @@ Current data:
   }
 }
 
-// ===== TEXTS / GOOGLE VOICE =====
-var _gmailToken=null,_gmailTokenExp=0;
-
-function textsData(){
-  if(!data.texts)data.texts={scheduled:[],sent:[]};
-  if(!data.texts.scheduled)data.texts.scheduled=[];
-  if(!data.texts.sent)data.texts.sent=[];
-  return data.texts;
-}
-
-function fmtDateTime(iso){
-  if(!iso)return'';
-  const d=new Date(iso);
-  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-}
-
-function renderTexts(){
-  const t=textsData();
-  const isConnected=_gmailToken&&Date.now()<_gmailTokenExp;
-  const hasSetup=data.gmailClientId&&data.gvPhone;
-  const authCard=document.getElementById('text-auth-card');
-  if(!hasSetup){
-    authCard.innerHTML=`<div class="gmail-setup-card">
-      <div style="font-size:36px;margin-bottom:12px">📨</div>
-      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Set Up Free Texting</div>
-      <div style="font-size:13px;color:var(--muted2);margin-bottom:18px;line-height:1.6">Connect your Gmail to send texts from your Google Voice number for free.</div>
-      <button class="btn btn-gold" onclick="openTextSetup()">⚙ Set Up Now</button>
-    </div>`;
-  }else{
-    authCard.innerHTML=`<div class="card-sm flex-between">
-      <div style="font-size:13px">
-        <strong>GV:</strong> ${esc(data.gvPhone)}
-        <span class="tag tag-${isConnected?'green':'muted'}" style="margin-left:8px">${isConnected?'✓ Gmail Connected':'Not Connected'}</span>
-      </div>
-      <div class="flex gap8">
-        ${isConnected
-          ?'<button class="btn btn-ghost btn-sm" onclick="gmailSignOut()">Disconnect</button>'
-          :'<button class="btn btn-gold btn-sm" onclick="gmailSignIn()">Connect Gmail</button>'}
-        <button class="btn btn-ghost btn-sm" onclick="openTextSetup()">⚙</button>
-      </div>
-    </div>`;
-  }
-  // Scheduled
-  const scheduled=t.scheduled.slice().sort((a,b)=>a.sendAt.localeCompare(b.sendAt));
-  const nowIso=new Date().toISOString();
-  document.getElementById('text-queue-count').textContent=scheduled.length;
-  document.getElementById('text-scheduled-empty').style.display=scheduled.length===0?'block':'none';
-  document.getElementById('text-scheduled-list').innerHTML=scheduled.map(tx=>{
-    const overdue=tx.sendAt<nowIso;
-    const soon=!overdue&&tx.sendAt<new Date(Date.now()+3600000).toISOString();
-    return`<div class="text-item ${overdue?'overdue':soon?'soon':''} fade-in">
-      <div style="font-size:20px;margin-top:2px">${overdue?'⚠':'⏱'}</div>
-      <div class="text-body">
-        <div class="text-to">To: ${esc(tx.toName||tx.toPhone)}</div>
-        <div class="text-msg">${esc(tx.message)}</div>
-        <div class="text-sched">${overdue?'<span style="color:var(--red)">App was closed at send time — tap Send now</span>':fmtDateTime(tx.sendAt)}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <button class="btn-icon" onclick="openTextModal('${tx.id}')">✏</button>
-        <button class="btn btn-gold btn-sm" onclick="sendTextNow('${tx.id}')" title="Send now">▶</button>
-      </div>
-    </div>`;
-  }).join('');
-  // Sent
-  const sent=t.sent.slice().reverse();
-  document.getElementById('text-sent-empty').style.display=sent.length===0?'block':'none';
-  document.getElementById('text-sent-list').innerHTML=sent.slice(0,30).map(tx=>`
-    <div class="text-item fade-in" style="opacity:.7">
-      <div style="font-size:20px;margin-top:2px;color:var(--green2)">✓</div>
-      <div class="text-body">
-        <div class="text-to">To: ${esc(tx.toName||tx.toPhone)}</div>
-        <div class="text-msg">${esc(tx.message)}</div>
-        <div class="text-sched">Sent ${esc(tx.sentAt?fmtDateTime(tx.sentAt):'')}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function openTextModal(id){
-  const editTx=id?textsData().scheduled.find(x=>x.id===id):null;
-  document.getElementById('txt-id').value=id||'';
-  document.getElementById('text-modal-title').textContent=id?'Edit Scheduled Text':'New Text';
-  document.getElementById('txt-delete-btn').style.display=id?'inline-flex':'none';
-  document.getElementById('txt-now').checked=false;
-  document.getElementById('txt-date').disabled=false;
-  document.getElementById('txt-time').disabled=false;
-  // Populate contact picker from Network contacts with phone numbers
-  const contacts=(data.network||[]).filter(c=>c.phone);
-  document.getElementById('txt-contact').innerHTML='<option value="">From Network</option>'+contacts.map(c=>`<option value="${esc(c.phone)}">${esc(c.name)}</option>`).join('');
-  if(editTx){
-    document.getElementById('txt-phone').value=editTx.toPhone;
-    document.getElementById('txt-msg').value=editTx.message;
-    const dt=new Date(editTx.sendAt);
-    document.getElementById('txt-date').value=dt.toISOString().split('T')[0];
-    document.getElementById('txt-time').value=dt.toTimeString().slice(0,5);
-  }else{
-    document.getElementById('txt-phone').value='';
-    document.getElementById('txt-msg').value='';
-    const soon=new Date(Date.now()+30*60000);
-    document.getElementById('txt-date').value=soon.toISOString().split('T')[0];
-    document.getElementById('txt-time').value=soon.toTimeString().slice(0,5);
-  }
-  openModal('text-modal');
-}
-
-function fillTextPhone(){
-  const sel=document.getElementById('txt-contact');
-  if(sel.value)document.getElementById('txt-phone').value=sel.value;
-}
-
-function toggleTxtNow(){
-  const on=document.getElementById('txt-now').checked;
-  document.getElementById('txt-date').disabled=on;
-  document.getElementById('txt-time').disabled=on;
-}
-
-function saveScheduledText(){
-  const phone=document.getElementById('txt-phone').value.trim();
-  const msg=document.getElementById('txt-msg').value.trim();
-  if(!phone||!msg){alert('Phone number and message are required.');return}
-  const sendNow=document.getElementById('txt-now').checked;
-  const date=document.getElementById('txt-date').value;
-  const time=document.getElementById('txt-time').value||'09:00';
-  const sendAt=sendNow?new Date().toISOString():`${date}T${time}:00`;
-  const id=document.getElementById('txt-id').value;
-  const t=textsData();
-  const contact=(data.network||[]).find(c=>c.phone===phone);
-  const obj={id:id||uid(),toPhone:phone,toName:contact?contact.name:'',message:msg,sendAt,createdAt:new Date().toISOString()};
-  if(id){const i=t.scheduled.findIndex(x=>x.id===id);if(i>=0)t.scheduled[i]=obj;}
-  else t.scheduled.push(obj);
-  save();
-  closeModal('text-modal');
-  if(sendNow&&_gmailToken&&Date.now()<_gmailTokenExp){
-    sendTextNow(obj.id);
-  }else{
-    renderTexts();
-    if(sendNow)showVoiceToast('','Text saved. Connect Gmail to send it now.','');
-  }
-}
-
-function deleteScheduledText(){
-  const id=document.getElementById('txt-id').value;
-  if(!id||!confirm('Delete this scheduled text?'))return;
-  data.texts.scheduled=data.texts.scheduled.filter(x=>x.id!==id);
-  save();closeModal('text-modal');renderTexts();
-}
-
-async function sendTextNow(id){
-  const t=textsData();
-  const tx=t.scheduled.find(x=>x.id===id);
-  if(!tx)return;
-  if(!_gmailToken||Date.now()>=_gmailTokenExp){
-    const ok=await gmailSignIn();
-    if(!ok){
-      showVoiceToast('','Connect Gmail first (tap ⚙ Setup → Connect Gmail).','error');
-      renderTexts();return;
-    }
-  }
-  try{
-    const digits=tx.toPhone.replace(/\D/g,'');
-    if(!digits){showVoiceToast('','Invalid phone number.','error');return}
-    const toEmail=digits+'@txt.voice.google.com';
-    const rawEmail=`To: ${toEmail}\r\nSubject: \r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${tx.message}`;
-    const encoded=btoa(unescape(encodeURIComponent(rawEmail))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+_gmailToken,'Content-Type':'application/json'},
-      body:JSON.stringify({raw:encoded})
-    });
-    if(!res.ok){
-      const err=await res.json().catch(()=>({}));
-      showVoiceToast('','Send failed: '+(err.error?.message||'HTTP '+res.status),'error');
-      renderTexts();return;
-    }
-    tx.sentAt=new Date().toISOString();
-    t.scheduled=t.scheduled.filter(x=>x.id!==id);
-    t.sent.unshift({...tx});
-    if(t.sent.length>50)t.sent=t.sent.slice(0,50);
-    save();
-    renderTexts();
-    showVoiceToast('','✓ Text sent to '+(tx.toName||tx.toPhone),'success');
-  }catch(e){
-    showVoiceToast('','Error: '+e.message,'error');
-    renderTexts();
-  }
-}
-
-// Auto-scheduler — checks every 60 seconds when app is open
-setInterval(async()=>{
-  const t=textsData();
-  const nowIso=new Date().toISOString();
-  const due=t.scheduled.filter(x=>x.sendAt<=nowIso);
-  if(due.length===0)return;
-  if(!_gmailToken||Date.now()>=_gmailTokenExp)return;
-  for(const tx of due){
-    await sendTextNow(tx.id);
-    await new Promise(r=>setTimeout(r,1500));
-  }
-},60000);
-
-function openTextSetup(){
-  document.getElementById('setup-gv-phone').value=data.gvPhone||'';
-  document.getElementById('setup-client-id').value=data.gmailClientId||'';
-  openModal('text-setup-modal');
-}
-
-function saveTextSetup(){
-  data.gvPhone=document.getElementById('setup-gv-phone').value.trim();
-  data.gmailClientId=document.getElementById('setup-client-id').value.trim();
-  save();
-  closeModal('text-setup-modal');
-  if(data.gmailClientId){gmailSignIn();}
-  else{renderTexts();}
-}
-
-// GMAIL OAUTH — Google Identity Services (token model, no backend needed)
-function loadGSI(cb){
-  if(window.google&&window.google.accounts){cb();return;}
-  const s=document.createElement('script');
-  s.src='https://accounts.google.com/gsi/client';
-  s.async=true;s.defer=true;
-  s.onload=cb;
-  document.head.appendChild(s);
-}
-
-function gmailSignIn(){
-  return new Promise(resolve=>{
-    if(!data.gmailClientId){
-      alert('Enter your Google OAuth Client ID in ⚙ Setup first.');
-      resolve(false);return;
-    }
-    loadGSI(()=>{
-      try{
-        const client=google.accounts.oauth2.initTokenClient({
-          client_id:data.gmailClientId,
-          scope:'https://www.googleapis.com/auth/gmail.send',
-          callback:(resp)=>{
-            if(resp.error||!resp.access_token){resolve(false);return;}
-            _gmailToken=resp.access_token;
-            _gmailTokenExp=Date.now()+(Number(resp.expires_in||3600)-60)*1000;
-            renderTexts();
-            resolve(true);
-          }
-        });
-        client.requestAccessToken({prompt:''});
-      }catch(e){alert('OAuth error: '+e.message);resolve(false);}
-    });
-  });
-}
-
-function gmailSignOut(){
-  if(_gmailToken&&window.google&&window.google.accounts){
-    google.accounts.oauth2.revoke(_gmailToken,()=>{});
-  }
-  _gmailToken=null;_gmailTokenExp=0;
-  renderTexts();
-}
 
 // ===== KEYBOARD =====
 document.addEventListener('keydown',e=>{
