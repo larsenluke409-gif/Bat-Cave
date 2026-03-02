@@ -1196,19 +1196,22 @@ function renderDayPlanner(){
     </div>
   `;
 
-  // Schedule section — 5 AM to 11 PM
+  // Schedule section — 5 AM to 11 PM in 30-min slots
   const hours=[];
-  for(let h=5;h<=23;h++){hours.push(h);}
-  const scheduleRows=hours.map(h=>{
-    const hourKey=String(h).padStart(2,'0')+':00';
-    const label=h===12?'12 PM':h<12?h+' AM':(h-12)+' PM';
+  for(let h=5;h<=23;h++){hours.push({h,m:0});hours.push({h,m:30});}
+  const scheduleRows=hours.map(({h,m})=>{
+    const hourKey=String(h).padStart(2,'0')+':'+(m===0?'00':'30');
+    const baseH=h===12?'12':h<12?String(h):String(h-12);
+    const ampm=h<12?'AM':'PM';
+    const label=m===0?`${baseH} ${ampm}`:`${baseH}:30`;
     const slots=(plan.slots&&plan.slots[hourKey])||[];
-    // Pull calendar events matching this date+hour
+    // Pull calendar events matching this date+hour+halfhour
     const evs=(data.events||[]).filter(e=>{
       if(e.date!==dayPlanDate)return false;
       if(!e.time)return false;
       const evH=parseInt(e.time.split(':')[0]);
-      return evH===h;
+      const evM=parseInt(e.time.split(':')[1]||0);
+      return evH===h&&(m===0?evM<30:evM>=30);
     });
     const evHtml=evs.map(e=>`
       <div class="dp-slot-item" style="background:#448aff11;border-left:2px solid var(--blue);border-radius:6px">
