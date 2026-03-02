@@ -131,16 +131,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .4s ease}
 .goal-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted)}
 
-/* ===== SOCIAL ===== */
-.platform-tabs{display:flex;gap:6px;margin-bottom:16px}
-.ptab{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);transition:all .15s;font-family:'Inter',sans-serif}
-.ptab.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
-.ai-output{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:13px;line-height:1.7;min-height:120px;color:var(--muted2);white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;min-width:0}
-.post-queue{display:flex;flex-direction:column;gap:8px}
-.post-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
-.post-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.post-body{font-size:12px;color:var(--muted2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-
 /* ===== NETWORK ===== */
 .network-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .network-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:border-color .15s}
@@ -179,18 +169,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .sb-box p{color:#6b6b8a;font-size:13px;margin-bottom:24px}
 .sb-err{display:none;background:#ff525222;border:1px solid #ff5252;border-radius:8px;padding:10px;color:#ff7070;font-size:12px;margin-bottom:12px}
 .sb-dot{position:fixed;bottom:96px;right:28px;width:10px;height:10px;border-radius:50%;background:#555;z-index:498;cursor:pointer;transition:background .3s}
-
-/* ALFRED */
-.alfred-briefing{background:linear-gradient(135deg,#13131f,#1a1228);border:1px solid #3a2a5a;border-radius:var(--radius);padding:20px}
-.alfred-badge{display:inline-flex;align-items:center;gap:6px;background:#3a2a5a;color:#b388ff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
-.alfred-chat{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow-y:auto;margin-bottom:12px;padding-right:4px}
-.chat-msg{padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.6;max-width:85%}
-.chat-msg.alfred{background:#1e1e2e;border:1px solid #2e2e4a;color:var(--text);align-self:flex-start}
-.chat-msg.luke{background:#3a2050;border:1px solid #5a3070;color:#ddd;align-self:flex-end}
-.chat-input-row{display:flex;gap:8px}
-.research-item{padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6}
-.research-item:last-child{border-bottom:none}
-.research-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#b388ff;margin-bottom:4px}
 
 /* VOICE */
 .voice-btn{position:fixed;bottom:28px;right:28px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8f00);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;z-index:500;box-shadow:0 4px 24px #FFB30055;transition:all .2s}
@@ -297,11 +275,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   .modal-row{flex-direction:column}
   .modal-row>*{flex:none}
   .hero-greeting{font-size:22px}
-  .alfred-briefing{padding:16px}
-  .alfred-chat{max-height:260px}
-  .chat-input-row input{font-size:16px} /* prevent zoom on iOS */
   input,textarea,select{font-size:16px} /* prevent iOS zoom */
-  .platform-tabs{flex-wrap:wrap}
   .stat-num{font-size:20px}
   .btn{padding:10px 16px;min-height:44px}
   .btn-sm{min-height:36px}
@@ -324,11 +298,9 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <button class="nav-btn active" onclick="switchView('home')" data-view="home"><span>🏠</span><span class="tooltip">Home</span></button>
   <button class="nav-btn" onclick="switchView('calendar')" data-view="calendar"><span>📅</span><span class="tooltip">Calendar</span></button>
   <button class="nav-btn" onclick="switchView('goals')" data-view="goals"><span>🎯</span><span class="tooltip">Goals</span></button>
-  <button class="nav-btn" onclick="switchView('social')" data-view="social"><span>📱</span><span class="tooltip">Social</span></button>
   <button class="nav-btn" onclick="switchView('network')" data-view="network"><span>🤝</span><span class="tooltip">Network</span></button>
   <button class="nav-btn" onclick="switchView('ideas')" data-view="ideas"><span>💡</span><span class="tooltip">Ideas</span></button>
   <button class="nav-btn" onclick="switchView('finance')" data-view="finance"><span>💰</span><span class="tooltip">Finance</span></button>
-  <button class="nav-btn" onclick="switchView('alfred')" data-view="alfred"><span>🎩</span><span class="tooltip">Alfred</span></button>
   <button class="nav-btn" onclick="switchView('calls')" data-view="calls"><span>📞</span><span class="tooltip">Call Logger</span></button>
   <button class="nav-btn" onclick="switchView('vnotes')" data-view="vnotes"><span>🎙</span><span class="tooltip">Voice Notes</span></button>
   <button class="nav-btn" onclick="switchView('timer')" data-view="timer"><span>⏱</span><span class="tooltip">Focus Timer</span></button>
@@ -339,11 +311,9 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <nav class="bottom-nav" id="bottom-nav">
   <div class="bottom-nav-inner">
     <button class="bnav-btn active" onclick="switchView('home')" data-bview="home"><span class="bi">🏠</span>Home</button>
-    <button class="bnav-btn" onclick="switchView('alfred')" data-bview="alfred"><span class="bi">🎩</span>Alfred</button>
     <button class="bnav-btn" onclick="switchView('calendar')" data-bview="calendar"><span class="bi">📅</span>Calendar</button>
     <button class="bnav-btn" onclick="switchView('goals')" data-bview="goals"><span class="bi">🎯</span>Goals</button>
     <button class="bnav-btn" onclick="switchView('network')" data-bview="network"><span class="bi">🤝</span>Network</button>
-    <button class="bnav-btn" onclick="switchView('social')" data-bview="social"><span class="bi">📱</span>Social</button>
     <button class="bnav-btn" onclick="switchView('ideas')" data-bview="ideas"><span class="bi">💡</span>Ideas</button>
     <button class="bnav-btn" onclick="switchView('finance')" data-bview="finance"><span class="bi">💰</span>Finance</button>
     <button class="bnav-btn" onclick="switchView('calls')" data-bview="calls"><span class="bi">📞</span>Calls</button>
@@ -362,7 +332,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div class="hero-quote" id="hero-quote"></div>
   </div>
   <div class="home-body">
-    <div class="stat-grid" id="home-stats" style="grid-template-columns:repeat(3,1fr)"></div>
+    <div class="stat-grid" id="home-stats" style="grid-template-columns:repeat(4,1fr)"></div>
     <div class="bday-card" id="home-birthdays" style="display:none"></div>
     <div class="card">
       <div class="flex-between" style="margin-bottom:12px">
@@ -412,63 +382,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <div id="goals-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:13px">No goals yet. Add your first one.</div>
 </div>
 
-<!-- SOCIAL -->
-<div id="view-social" class="view" style="overflow:hidden">
-  <div class="flex-between">
-    <div>
-      <div style="font-size:20px;font-weight:800">Social Hub</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">AI-powered content for Crew Voice.</div>
-    </div>
-    <button class="btn btn-ghost btn-sm" onclick="openApiKeyModal()">⚙ API Key</button>
-  </div>
-  <div class="grid2" style="align-items:start">
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card">
-        <div class="section-title">Generate Content</div>
-        <div class="platform-tabs" id="platform-tabs">
-          <button class="ptab active" onclick="setPlatform('Instagram')">Instagram</button>
-          <button class="ptab" onclick="setPlatform('Facebook')">Facebook</button>
-          <button class="ptab" onclick="setPlatform('LinkedIn')">LinkedIn</button>
-          <button class="ptab" onclick="setPlatform('TikTok')">TikTok</button>
-        </div>
-        <div style="margin-bottom:10px">
-          <label>Content Type</label>
-          <select id="content-type">
-            <option>Post Caption</option>
-            <option>Reel Script</option>
-            <option>Story Idea</option>
-            <option>Hook + CTA</option>
-          </select>
-        </div>
-        <div style="margin-bottom:12px">
-          <label>Topic / Prompt</label>
-          <textarea id="social-prompt" placeholder="e.g. Why lawn care owners are losing crew members silently..." style="min-height:70px"></textarea>
-        </div>
-        <button class="btn btn-gold" style="width:100%" onclick="generatePost()">✦ Generate with AI</button>
-        <div id="social-loading" style="display:none;text-align:center;padding:12px;color:var(--muted);font-size:13px">Generating...</div>
-        <div style="margin-top:12px">
-          <div class="ai-output" id="ai-output">Your generated content will appear here.</div>
-          <div id="ai-actions" style="display:none;margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
-            <button class="btn btn-ghost btn-sm" onclick="copyPost()">Copy</button>
-            <button class="btn btn-gold btn-sm" onclick="savePost()">Save to Queue</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card">
-        <div class="flex-between" style="margin-bottom:12px">
-          <div class="section-title" style="margin:0">Content Queue</div>
-          <span id="queue-count" class="tag tag-gold">0</span>
-        </div>
-        <div class="post-queue" id="post-queue">
-          <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No saved posts yet.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- NETWORK -->
 <div id="view-network" class="view">
   <div class="flex-between">
@@ -495,45 +408,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <div class="idea-filter-bar" id="idea-filter-bar"></div>
   <div id="ideas-list" style="display:flex;flex-direction:column;gap:8px"></div>
   <div id="ideas-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:13px">No ideas yet. Your next big thing starts here.</div>
-</div>
-
-<!-- ALFRED -->
-<div id="view-alfred" class="view">
-  <div class="flex-between" style="margin-bottom:20px">
-    <div>
-      <div style="font-size:20px;font-weight:800">Alfred</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">Your AI chief of staff. Prepared before you wake up.</div>
-    </div>
-    <button class="btn btn-ghost btn-sm" onclick="regenerateBriefing()">↻ Regenerate</button>
-  </div>
-  <div class="grid2" style="align-items:start">
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <!-- Daily Briefing -->
-      <div class="alfred-briefing">
-        <div class="alfred-badge">🎩 Daily Briefing</div>
-        <div id="alfred-briefing-content" style="color:var(--muted2);font-size:13px;line-height:1.7">Loading briefing...</div>
-      </div>
-      <!-- Morning Research -->
-      <div class="card">
-        <div class="alfred-badge" style="background:#1a2a1a;color:var(--green2)">🔍 Morning Research</div>
-        <div id="alfred-research-content" style="color:var(--muted2);font-size:13px">
-          <div style="color:var(--muted);font-size:12px">Tap "Generate Research" to get today's fresh ideas.</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="generateResearch()">✦ Generate Today's Research</button>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <!-- Chat -->
-      <div class="card" style="display:flex;flex-direction:column">
-        <div class="alfred-badge" style="margin-bottom:14px">💬 Talk to Alfred</div>
-        <div class="alfred-chat" id="alfred-chat"></div>
-        <div class="chat-input-row">
-          <input id="alfred-input" type="text" placeholder="Ask Alfred anything..." onkeydown="if(event.key==='Enter')sendToAlfred()" style="flex:1">
-          <button class="btn btn-gold btn-sm" onclick="sendToAlfred()">Send</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- FINANCE -->
@@ -591,9 +465,11 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div style="font-size:12px;color:var(--muted);margin-top:2px">Capture thoughts instantly.</div>
   </div>
   <div class="card" style="text-align:center;padding:28px">
-    <button class="vn-record-btn" id="vn-btn" onclick="toggleVnote()">🎙</button>
-    <div id="vn-status" style="margin-top:14px;font-size:13px;color:var(--muted)">Tap to record</div>
-    <div id="vn-interim" style="margin-top:8px;font-size:12px;color:var(--muted2);font-style:italic;min-height:18px"></div>
+    <div style="text-align:center;padding:24px 0">
+      <button class="vn-record-btn" id="vn-record-btn" onclick="toggleVnote()">🎙</button>
+      <div id="vn-status" style="margin-top:12px;font-size:13px;color:var(--muted)">Tap to record a voice note</div>
+      <div id="vn-interim" style="margin-top:6px;font-size:12px;color:var(--muted2);font-style:italic;min-height:18px"></div>
+    </div>
   </div>
   <div style="margin-bottom:4px">
     <input id="vn-search" type="text" placeholder="Search notes..." oninput="renderVNotes()" style="width:100%">
@@ -946,20 +822,6 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   </div>
 </div>
 
-<!-- API Key Modal -->
-<div class="modal-overlay" id="apikey-modal" onclick="if(event.target===this)closeModal('apikey-modal')">
-  <div class="modal">
-    <div class="modal-title">Claude API Key</div>
-    <p style="font-size:13px;color:var(--muted2);margin-bottom:14px;line-height:1.6">Used to generate social media content with AI. Stored only in your browser.</p>
-    <label>API Key</label>
-    <input id="api-key-input" type="password" placeholder="sk-ant-...">
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('apikey-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveApiKey()">Save</button>
-    </div>
-  </div>
-</div>
-
 <!-- Call Logger Modal -->
 <div class="modal-overlay" id="call-modal" onclick="if(event.target===this)closeModal('call-modal')">
   <div class="modal">
@@ -1018,7 +880,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <script>
 // ===== DATA =====
 const KEY='batCave2';
-function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[],dayPlan:{},calFilters:{events:true,focus:true,calls:true,birthdays:true}}}
+function def(){return{focus:[],events:[],goals:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[],dayPlan:{},calFilters:{events:true,focus:true,calls:true,birthdays:true}}}
 var data=JSON.parse(localStorage.getItem(KEY)||'null')||def();
 function save(){localStorage.setItem(KEY,JSON.stringify(data));clearTimeout(window._sbTimer);window._sbTimer=setTimeout(()=>sbPush(data),2000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -1036,7 +898,7 @@ function switchView(v){
   renders[v]&&renders[v]();
   window.scrollTo(0,0);
 }
-const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,social:renderSocial,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,alfred:renderAlfred,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal};
+const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal};
 
 // ===== MODAL =====
 function openModal(id){document.getElementById(id).classList.add('active')}
@@ -1070,13 +932,11 @@ function renderHome(){
   // Stats
   const active=data.goals.filter(g=>!g.done).length;
   const due=(data.network||[]).filter(n=>{if(!n.lastTouch)return true;const d=(Date.now()-new Date(n.lastTouch))/(1000*60*60*24);return d>14}).length;
-  const posts=(data.posts||[]).filter(p=>!p.posted).length;
   const hotIdeas=(data.ideas||[]).filter(i=>i.hot).length;
   const callsToday=(data.calls||[]).filter(c=>c.date===today()).length;
   document.getElementById('home-stats').innerHTML=`
     <div class="stat-card"><div class="stat-num">${active}</div><div class="stat-label">Active Goals</div></div>
     <div class="stat-card"><div class="stat-num" style="color:${due>0?'var(--red)':'var(--green)'}">${due}</div><div class="stat-label">Need Touch</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--blue)">${posts}</div><div class="stat-label">Posts Queued</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--gold)">${hotIdeas}</div><div class="stat-label">🔥 Hot Ideas</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--green)">${callsToday}</div><div class="stat-label">📞 Calls Today</div></div>
   `;
@@ -1330,9 +1190,9 @@ function renderDayPlanner(){
     </div>
   `;
 
-  // Schedule section — 6 AM to 10 PM
+  // Schedule section — 5 AM to 11 PM
   const hours=[];
-  for(let h=6;h<=22;h++){hours.push(h);}
+  for(let h=5;h<=23;h++){hours.push(h);}
   const scheduleRows=hours.map(h=>{
     const hourKey=String(h).padStart(2,'0')+':00';
     const label=h===12?'12 PM':h<12?h+' AM':(h-12)+' PM';
@@ -1503,79 +1363,6 @@ function toggleGoalDone(id){
   if(g.done){g.progress=100;confetti()}
   save();renderGoals();
 }
-
-// ===== SOCIAL =====
-let activePlatform='Instagram';
-let lastGeneratedPost='';
-function setPlatform(p){
-  activePlatform=p;
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.toggle('active',t.textContent===p));
-}
-function renderSocial(){
-  renderPostQueue();
-  const key=data.apiKey||'';
-  if(key)document.getElementById('api-key-input').value=key;
-}
-function renderPostQueue(){
-  const posts=(data.posts||[]).filter(p=>!p.posted);
-  document.getElementById('queue-count').textContent=posts.length;
-  if(posts.length===0){document.getElementById('post-queue').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No saved posts yet.</div>';return}
-  document.getElementById('post-queue').innerHTML=posts.map(p=>`
-    <div class="post-card fade-in">
-      <div class="post-card-top">
-        <div class="flex gap8"><span class="tag tag-muted">${esc(p.platform)}</span><span class="tag tag-blue">${esc(p.type)}</span></div>
-        <div class="flex gap8">
-          <button class="btn btn-ghost btn-sm" onclick="markPosted('${p.id}')">✓ Posted</button>
-          <button class="btn-icon" onclick="deletePost('${p.id}')">×</button>
-        </div>
-      </div>
-      <div class="post-body">${esc(p.content)}</div>
-    </div>
-  `).join('');
-}
-function markPosted(id){const p=data.posts.find(x=>x.id===id);if(p){p.posted=true;save();renderPostQueue()}}
-function deletePost(id){data.posts=data.posts.filter(x=>x.id!==id);save();renderPostQueue()}
-async function generatePost(){
-  const prompt=document.getElementById('social-prompt').value.trim();
-  if(!prompt)return;
-  const key=data.apiKey||'';
-  if(!key){alert('Add your Claude API key first (⚙ button).');openApiKeyModal();return}
-  const type=document.getElementById('content-type').value;
-  const output=document.getElementById('ai-output');
-  const loading=document.getElementById('social-loading');
-  output.textContent='';
-  loading.style.display='block';
-  document.getElementById('ai-actions').style.display='none';
-  const systemPrompt=`You are a social media expert for Crew Voice, a service that provides monthly bilingual employee interviews and retention intelligence for lawn care and landscaping businesses. You write authentic, engaging content that speaks directly to small business owners in the green industry. Be conversational, direct, and avoid corporate fluff. Keep it real.`;
-  const userPrompt=`Write a ${type} for ${activePlatform} about: ${prompt}\n\nMake it feel authentic and human. If it's a reel script, include scene descriptions. Include relevant emojis naturally. Keep it appropriate for the platform.`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
-    });
-    const json=await res.json();
-    loading.style.display='none';
-    if(json.error){output.textContent='Error: '+json.error.message;return}
-    lastGeneratedPost=json.content[0].text;
-    output.textContent=lastGeneratedPost;
-    document.getElementById('ai-actions').style.display='flex';
-  }catch(e){
-    loading.style.display='none';
-    output.textContent='Error: '+e.message;
-  }
-}
-function copyPost(){if(lastGeneratedPost)navigator.clipboard.writeText(lastGeneratedPost).then(()=>{})}
-function savePost(){
-  if(!lastGeneratedPost)return;
-  if(!data.posts)data.posts=[];
-  data.posts.unshift({id:uid(),platform:activePlatform,type:document.getElementById('content-type').value,content:lastGeneratedPost,posted:false,createdAt:today()});
-  save();renderPostQueue();
-  document.getElementById('ai-actions').style.display='none';
-  document.getElementById('ai-output').textContent='Saved to queue!';
-}
-function openApiKeyModal(){document.getElementById('api-key-input').value=data.apiKey||'';openModal('apikey-modal')}
-function saveApiKey(){data.apiKey=document.getElementById('api-key-input').value.trim();save();closeModal('apikey-modal')}
 
 // ===== NETWORK =====
 let ncStarVal=3;
@@ -2002,45 +1789,9 @@ function showVoiceToast(transcript,result,type){
   if(!voiceListening)window._voiceToastTimer=setTimeout(()=>{toast.classList.remove('show')},4000);
 }
 
-async function processVoiceCommand(text){
-  showVoiceToast(text,'Thinking...','');
-  const key=data.apiKey||'';
-  if(key){
-    await processVoiceWithAI(text,key);
-  }else{
-    processVoiceRuleBased(text);
-  }
-}
-
-async function processVoiceWithAI(text,key){
-  const sys=`You are a voice command parser for a personal productivity app called Bat Cave 2.0. The user is Luke Larsen, owner of Crew Voice (bilingual employee interviews for lawn care businesses). Parse the user's spoken command and return ONLY a JSON object with no explanation.
-
-Possible intents:
-- focus: Add a today's focus item. Fields: {intent:"focus", text:"..."}
-- idea: Capture an idea. Fields: {intent:"idea", text:"...", cat:"Business|Product|Content|Outreach|Personal|Random"}
-- goal: Add a goal. Fields: {intent:"goal", title:"...", category:"Business|Personal|Health|Financial|Relationships", desc:"..."}
-- event: Add a calendar event. Fields: {intent:"event", title:"...", date:"YYYY-MM-DD", time:"HH:MM"(optional)}
-- network: Add a network contact. Fields: {intent:"network", name:"...", company:"...", phone:"...", type:"Client|Prospect|Mentor|Partner|Friend|Referral Source"}
-- touch: Log a touch for an existing contact. Fields: {intent:"touch", name:"...", touchType:"Call|Text|Email|LinkedIn|In Person|Other", note:"..."}
-- post: Save a social media post idea. Fields: {intent:"post", platform:"Instagram|Facebook|LinkedIn|TikTok", content:"..."}
-- unknown: Can't parse. Fields: {intent:"unknown"}
-
-Today's date is ${today()}. If a date is mentioned like "tomorrow", calculate it. If no date given for events, use today.`;
-
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:200,system:sys,messages:[{role:'user',content:text}]})
-    });
-    const json=await res.json();
-    if(json.error){processVoiceRuleBased(text);return}
-    let parsed;
-    try{parsed=JSON.parse(json.content[0].text)}catch(e){processVoiceRuleBased(text);return}
-    executeVoiceCommand(parsed,text);
-  }catch(e){
-    processVoiceRuleBased(text);
-  }
+function processVoiceCommand(text){
+  showVoiceToast(text,'Processing...','');
+  processVoiceRuleBased(text);
 }
 
 function processVoiceRuleBased(text){
@@ -2051,7 +1802,6 @@ function processVoiceRuleBased(text){
   else if(t.includes('goal')){parsed={intent:'goal',title:text.replace(/add a goal|new goal|goal:/gi,'').trim(),category:'Business',desc:''}}
   else if(t.includes('event')||t.includes('meeting')||t.includes('schedule')){parsed={intent:'event',title:text.replace(/add (an )?event|schedule a?|new meeting/gi,'').trim(),date:today()}}
   else if(t.includes('contact')||t.includes('network')){parsed={intent:'network',name:text.replace(/add (a )?contact|add to network/gi,'').trim(),company:'',phone:'',type:'Contact'}}
-  else if(t.includes('post')||t.includes('instagram')||t.includes('linkedin')){parsed={intent:'post',platform:'Instagram',content:text}}
   executeVoiceCommand(parsed,text);
 }
 
@@ -2096,12 +1846,6 @@ function executeVoiceCommand(cmd,originalText){
       match.lastTouch=today();
       save();if(document.getElementById('view-network').classList.contains('active'))renderNetwork();
       showVoiceToast(originalText,'✓ Touch logged for '+match.name,'success');break;}
-    case 'post':{
-      if(!cmd.content){showVoiceToast(originalText,"Couldn't understand the post.",'error');return}
-      if(!data.posts)data.posts=[];
-      data.posts.unshift({id:uid(),platform:cmd.platform||'Instagram',type:'Post Caption',content:cmd.content,posted:false,createdAt:today()});
-      save();if(document.getElementById('view-social').classList.contains('active'))renderPostQueue();
-      showVoiceToast(originalText,'📱 Post saved to queue.','success');break;}
     default:
       showVoiceToast(originalText,"Didn't catch that. Try: \"Add focus send emails\" or \"Log win closed a client\"",'error');
   }
@@ -2170,193 +1914,6 @@ async function sbInitLoad(){
   if(!session){document.getElementById('sb-overlay').style.display='flex';return;}
   await sbInitLoad();
 })();
-
-// ===== ALFRED =====
-var alfredChatHistory=[];
-
-function renderAlfred(){
-  const dateKey=today();
-  const cached=data.alfred&&data.alfred[dateKey];
-  if(cached&&cached.briefing){
-    document.getElementById('alfred-briefing-content').innerHTML=cached.briefing;
-  }else{
-    generateBriefing();
-  }
-  if(cached&&cached.research){
-    renderResearch(cached.research);
-  }
-  renderAlfredChat();
-}
-
-function alfredContext(){
-  const now=new Date();
-  const upcoming=(data.events||[]).filter(e=>{
-    if(!e.date)return false;
-    const d=new Date(e.date+'T12:00:00');
-    const diff=(d-now)/(1000*60*60*24);
-    return diff>=-1&&diff<=7;
-  }).sort((a,b)=>a.date.localeCompare(b.date));
-  const activeGoals=data.goals.filter(g=>!g.done);
-  const overdueNetwork=(data.network||[]).filter(n=>{
-    if(!n.lastTouch)return true;
-    return(Date.now()-new Date(n.lastTouch))/(1000*60*60*24)>14;
-  });
-  const hotIdeas=(data.ideas||[]).filter(i=>i.hot);
-  return{today:today(),upcoming,activeGoals,overdueNetwork,hotIdeas};
-}
-
-async function generateBriefing(){
-  const key=data.apiKey||'';
-  const el=document.getElementById('alfred-briefing-content');
-  if(!key){el.innerHTML=buildLocalBriefing();return;}
-  el.innerHTML='<span style="color:var(--muted)">Preparing your briefing...</span>';
-  const ctx=alfredContext();
-  const sys=`You are Alfred, the AI chief of staff for Luke Larsen, founder of Crew Voice (monthly bilingual employee interviews for lawn care businesses). Luke's goal is 50 clients at $17,500 MRR by August 2026. First client: Russell Nafziger. Be brief, sharp, and direct — like a trusted advisor who respects Luke's time. Use line breaks for readability. No markdown headers, just clean paragraphs or short bullet points.`;
-  const prompt=`Good morning. Today is ${ctx.today}. Generate Luke's daily briefing.
-
-Upcoming events (next 7 days): ${ctx.upcoming.length?ctx.upcoming.map(e=>`${e.date}${e.time?' at '+e.time:''}: ${e.title}`).join(', '):'None scheduled'}
-Active goals: ${ctx.activeGoals.length?ctx.activeGoals.map(g=>`${g.title} (${g.progress||0}%)`).join(', '):'None set'}
-Network contacts overdue for a touch: ${ctx.overdueNetwork.length?ctx.overdueNetwork.map(n=>n.name).join(', '):'All good'}
-Hot ideas waiting for action: ${ctx.hotIdeas.length?ctx.hotIdeas.map(i=>i.text.slice(0,50)).join('; '):'None'}
-
-Write a sharp morning briefing: what needs attention today, any event reminders, and one direct piece of advice for Luke's day. Keep it under 120 words.`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:300,system:sys,messages:[{role:'user',content:prompt}]})
-    });
-    const json=await res.json();
-    if(json.error||!json.content){el.innerHTML=buildLocalBriefing();return;}
-    const text=json.content[0].text;
-    const html=text.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
-    el.innerHTML=html;
-    if(!data.alfred)data.alfred={};
-    data.alfred[today()]={...(data.alfred[today()]||{}),briefing:html};
-    save();
-  }catch(e){el.innerHTML=buildLocalBriefing();}
-}
-
-function buildLocalBriefing(){
-  const ctx=alfredContext();
-  const now=new Date();
-  const h=now.getHours();
-  const greeting=h<12?'Good morning':'Good afternoon';
-  let lines=[`${greeting}, Luke.`,''];
-  if(ctx.upcoming.length){
-    lines.push('<strong>Upcoming:</strong>');
-    ctx.upcoming.slice(0,3).forEach(e=>lines.push(`• ${e.date}${e.time?' at '+e.time:''}: ${e.title}`));
-    lines.push('');
-  }
-  if(ctx.activeGoals.length){
-    lines.push(`<strong>Active goals:</strong> ${ctx.activeGoals.slice(0,3).map(g=>g.title).join(', ')}.`);
-    lines.push('');
-  }
-  if(ctx.overdueNetwork.length){
-    lines.push(`<strong>Reach out to:</strong> ${ctx.overdueNetwork.slice(0,3).map(n=>n.name).join(', ')} — overdue for a touch.`);
-    lines.push('');
-  }
-  lines.push('Add your Claude API key for a smarter, personalized briefing.');
-  return lines.join('<br>');
-}
-
-function regenerateBriefing(){
-  if(!data.alfred)data.alfred={};
-  data.alfred[today()]={};
-  save();
-  generateBriefing();
-  document.getElementById('alfred-research-content').innerHTML='<div style="color:var(--muted);font-size:12px">Tap "Generate Today\'s Research" to get today\'s fresh ideas.</div>';
-}
-
-async function generateResearch(){
-  const key=data.apiKey||'';
-  const el=document.getElementById('alfred-research-content');
-  if(!key){el.innerHTML='<div style="color:var(--muted);font-size:12px">Add your Claude API key (in Social tab ⚙) to enable morning research.</div>';return;}
-  el.innerHTML='<div style="color:var(--muted);font-size:12px">Researching new opportunities for you...</div>';
-  const sys=`You are Alfred, the AI research assistant for Luke Larsen, founder of Crew Voice. You find fresh, actionable ideas every morning. Be specific, practical, and punchy. No fluff.`;
-  const prompt=`Today is ${today()}. Research and generate 4 fresh items for Luke:
-
-1. OUTREACH TACTIC: A specific new way to reach lawn care business owners this week (cold email angle, LinkedIn approach, local tactic, etc.)
-2. CONTENT IDEA: A social media post or reel concept about employee retention, bilingual crews, or lawn care business pain points
-3. INDUSTRY INSIGHT: Something relevant happening in the lawn care, landscaping, or blue-collar workforce space Luke should know about
-4. CHALLENGE: One small thing Luke can do today to push Crew Voice forward — specific and doable in under 2 hours
-
-Format each as a short label on the first line, then 2-3 sentences max.`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:sys,messages:[{role:'user',content:prompt}]})
-    });
-    const json=await res.json();
-    if(json.error||!json.content){el.innerHTML='<div style="color:var(--red);font-size:12px">Error generating research. Check your API key.</div>';return;}
-    const text=json.content[0].text;
-    renderResearch(text);
-    if(!data.alfred)data.alfred={};
-    data.alfred[today()]={...(data.alfred[today()]||{}),research:text};
-    save();
-  }catch(e){el.innerHTML='<div style="color:var(--red);font-size:12px">'+e.message+'</div>';}
-}
-
-function renderResearch(text){
-  const el=document.getElementById('alfred-research-content');
-  const sections=text.split(/\n(?=\d\.|\*\*\d)/);
-  if(sections.length<2){el.innerHTML='<div class="research-item">'+text.replace(/\n/g,'<br>')+'</div>';return;}
-  el.innerHTML=sections.map(s=>{
-    const lines=s.trim().split('\n');
-    const label=lines[0].replace(/^\d+\.\s*/,'').replace(/\*\*/g,'');
-    const body=lines.slice(1).join(' ').trim();
-    return`<div class="research-item"><div class="research-label">${esc(label)}</div><div>${body.replace(/\*\*/g,'')}</div></div>`;
-  }).join('');
-}
-
-function renderAlfredChat(){
-  const el=document.getElementById('alfred-chat');
-  if(alfredChatHistory.length===0){
-    el.innerHTML='<div class="chat-msg alfred">Good to see you, Luke. What\'s on your mind? I can help with goals, strategy, next steps — whatever you need.</div>';
-    return;
-  }
-  el.innerHTML=alfredChatHistory.map(m=>`<div class="chat-msg ${m.role==='assistant'?'alfred':'luke'}">${m.content.replace(/\n/g,'<br>')}</div>`).join('');
-  el.scrollTop=el.scrollHeight;
-}
-
-async function sendToAlfred(){
-  const input=document.getElementById('alfred-input');
-  const text=input.value.trim();if(!text)return;
-  input.value='';
-  const key=data.apiKey||'';
-  if(!key){
-    alfredChatHistory.push({role:'user',content:text});
-    alfredChatHistory.push({role:'assistant',content:'I need your Claude API key to respond. Add it in the Social tab (⚙ API Key button).'});
-    renderAlfredChat();return;
-  }
-  alfredChatHistory.push({role:'user',content:text});
-  renderAlfredChat();
-  const ctx=alfredContext();
-  const sys=`You are Alfred, the sharp and loyal AI chief of staff for Luke Larsen, founder of Crew Voice (monthly bilingual employee interviews for lawn care businesses). Luke's goal: 50 clients, $17,500 MRR by August 2026. His first client is Russell Nafziger. Be direct, confident, and helpful. Keep replies concise (under 120 words unless detail is needed). You have access to Luke's current data context.
-
-Current data:
-- Active goals: ${ctx.activeGoals.map(g=>g.title+'('+g.progress+'%)').join(', ')||'None'}
-- Upcoming events: ${ctx.upcoming.map(e=>e.date+': '+e.title).join(', ')||'None'}
-- Network contacts overdue: ${ctx.overdueNetwork.map(n=>n.name).join(', ')||'None'}
-- Hot ideas: ${ctx.hotIdeas.map(i=>i.text.slice(0,60)).join('; ')||'None'}
-- Today: ${today()}`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,system:sys,messages:alfredChatHistory.slice(-10).map(m=>({role:m.role,content:m.content}))})
-    });
-    const json=await res.json();
-    const reply=json.content?.[0]?.text||'Something went wrong. Try again.';
-    alfredChatHistory.push({role:'assistant',content:reply});
-    renderAlfredChat();
-  }catch(e){
-    alfredChatHistory.push({role:'assistant',content:'Error: '+e.message});
-    renderAlfredChat();
-  }
-}
-
 
 // ===== CALL LOGGER =====
 function renderCalls(){
@@ -2443,48 +2000,51 @@ function renderVNotes(){
   }).join('');
 }
 function toggleVnote(){
-  if(vnoteListening){stopVnote();return;}
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    document.getElementById('vn-status').textContent='Speech recognition not supported. Try Chrome.';return;
+  if(vnoteListening){ stopVnote(); return; }
+  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+    alert('Speech recognition not supported. Use Chrome or Safari.');
+    return;
   }
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  vnoteRecog=new SR();
-  vnoteRecog.lang='en-US';
-  vnoteRecog.interimResults=true;
-  vnoteRecog.maxAlternatives=1;
-  vnoteListening=true;
-  document.getElementById('vn-btn').classList.add('recording');
-  document.getElementById('vn-status').textContent='Recording...';
-  let finalTranscript='';
-  vnoteRecog.onresult=function(e){
-    let interim='';
-    finalTranscript='';
-    for(let i=0;i<e.results.length;i++){
-      if(e.results[i].isFinal)finalTranscript+=e.results[i][0].transcript;
-      else interim+=e.results[i][0].transcript;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  vnoteRecog = new SR();
+  vnoteRecog.lang = 'en-US';
+  vnoteRecog.interimResults = true;
+  vnoteRecog.maxAlternatives = 1;
+  vnoteListening = true;
+  const btn = document.getElementById('vn-record-btn');
+  const status = document.getElementById('vn-status');
+  if(btn) btn.classList.add('recording');
+  if(status) status.textContent = 'Listening... tap to stop';
+  vnoteRecog.onresult = function(e){
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    if(document.getElementById('vn-interim')) document.getElementById('vn-interim').textContent = '"' + transcript + '"';
+    if(e.results[e.results.length-1].isFinal){
+      stopVnote();
+      if(transcript.trim()){
+        if(!data.voiceNotes) data.voiceNotes = [];
+        data.voiceNotes.unshift({id:uid(), text:transcript.trim(), date:today(), createdAt:new Date().toISOString()});
+        save();
+        renderVNotes();
+      }
     }
-    document.getElementById('vn-interim').textContent=finalTranscript||interim;
   };
-  vnoteRecog.onend=function(){
+  vnoteRecog.onerror = function(e){
     stopVnote();
-    if(finalTranscript.trim()){
-      if(!data.voiceNotes)data.voiceNotes=[];
-      data.voiceNotes.push({id:uid(),text:finalTranscript.trim(),date:today(),createdAt:new Date().toISOString()});
-      save();renderVNotes();
-    }
+    const status = document.getElementById('vn-status');
+    if(status) status.textContent = 'Error: ' + e.error + '. Try again.';
   };
-  vnoteRecog.onerror=function(){stopVnote();document.getElementById('vn-status').textContent='Could not hear you. Try again.';};
+  vnoteRecog.onend = function(){ stopVnote(); };
   vnoteRecog.start();
 }
 function stopVnote(){
-  vnoteListening=false;
-  const btn=document.getElementById('vn-btn');
-  if(btn)btn.classList.remove('recording');
-  const st=document.getElementById('vn-status');
-  if(st)st.textContent='Tap to record';
-  const itr=document.getElementById('vn-interim');
-  if(itr)itr.textContent='';
-  if(vnoteRecog){try{vnoteRecog.stop()}catch(e){}}
+  vnoteListening = false;
+  const btn = document.getElementById('vn-record-btn');
+  const status = document.getElementById('vn-status');
+  const interim = document.getElementById('vn-interim');
+  if(btn) btn.classList.remove('recording');
+  if(status) status.textContent = 'Tap to record a voice note';
+  if(interim) interim.textContent = '';
+  if(vnoteRecog){ try{ vnoteRecog.stop(); }catch(e){} vnoteRecog = null; }
 }
 function deleteVNote(id){
   data.voiceNotes=(data.voiceNotes||[]).filter(n=>n.id!==id);
