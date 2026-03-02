@@ -251,6 +251,24 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .bnav-btn .bi{font-size:20px;line-height:1}
 .bnav-btn.active{color:var(--gold)}
 
+/* ===== DAY PLANNER ===== */
+.dp-hour-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;min-height:44px}
+.dp-hour-label{width:52px;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;padding-top:2px}
+.dp-hour-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.dp-slot-item{background:var(--surface2);border-radius:6px;padding:5px 10px;font-size:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dp-task-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.dp-task-item:last-child{border-bottom:none}
+.dp-task-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.dp-task-check.done{background:var(--gold);border-color:var(--gold);color:#000}
+.dp-task-text{flex:1;font-size:13px}
+.dp-task-text.done{text-decoration:line-through;color:var(--muted)}
+.dp-add-hour{font-size:11px;color:var(--muted2);background:none;border:1px dashed var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.dp-add-hour:hover{border-color:var(--gold);color:var(--gold)}
+/* ===== CALENDAR FILTERS ===== */
+.cal-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cal-filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:'Inter',sans-serif;transition:all .15s}
+.cal-filter-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+
 /* RESPONSIVE */
 @media(max-width:768px){
   html,body{overflow:auto;height:auto}
@@ -366,6 +384,12 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
       <button class="btn-icon" onclick="calNav(1)">›</button>
     </div>
     <button class="btn btn-gold btn-sm" onclick="openEventModal()">+ Event</button>
+  </div>
+  <div class="cal-filter-bar" id="cal-filter-bar">
+    <button class="cal-filter-btn active" data-filter="events" onclick="toggleCalFilter('events')">📅 Events</button>
+    <button class="cal-filter-btn active" data-filter="focus" onclick="toggleCalFilter('focus')">📌 Focus</button>
+    <button class="cal-filter-btn active" data-filter="calls" onclick="toggleCalFilter('calls')">📞 Calls</button>
+    <button class="cal-filter-btn active" data-filter="birthdays" onclick="toggleCalFilter('birthdays')">🎂 Birthdays</button>
   </div>
   <div class="cal-grid-header" id="cal-day-names"></div>
   <div class="cal-grid" id="cal-grid"></div>
@@ -982,10 +1006,19 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   </div>
 </div>
 
+<!-- Day Planner Modal -->
+<div class="modal-overlay" id="day-planner-modal" onclick="if(event.target===this)closeModal('day-planner-modal')">
+  <div class="modal" style="width:600px;max-width:96vw;max-height:88vh;overflow-y:auto">
+    <div id="dp-header"></div>
+    <div id="dp-tasks" style="margin-bottom:20px"></div>
+    <div id="dp-schedule"></div>
+  </div>
+</div>
+
 <script>
 // ===== DATA =====
 const KEY='batCave2';
-function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[]}}
+function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[],dayPlan:{},calFilters:{events:true,focus:true,calls:true,birthdays:true}}}
 var data=JSON.parse(localStorage.getItem(KEY)||'null')||def();
 function save(){localStorage.setItem(KEY,JSON.stringify(data));clearTimeout(window._sbTimer);window._sbTimer=setTimeout(()=>sbPush(data),2000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -1119,6 +1152,15 @@ function startStars(){
 // ===== CALENDAR =====
 let calYear=data.calYear,calMonth=data.calMonth;
 function renderCalendar(){
+  // Ensure calFilters exists
+  if(!data.calFilters)data.calFilters={events:true,focus:true,calls:true,birthdays:true};
+
+  // Sync filter button active states
+  document.querySelectorAll('.cal-filter-btn').forEach(btn=>{
+    const key=btn.dataset.filter;
+    btn.classList.toggle('active',!!data.calFilters[key]);
+  });
+
   const names=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   document.getElementById('cal-day-names').innerHTML=names.map(n=>`<div class="cal-day-name">${n}</div>`).join('');
   const label=new Date(calYear,calMonth).toLocaleDateString('en-US',{month:'long',year:'numeric'});
@@ -1135,9 +1177,50 @@ function renderCalendar(){
   for(let d=1;d<=days;d++){
     const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isToday=dateStr===todayStr;
-    const evs=(data.events||[]).filter(e=>e.date===dateStr);
-    const evHtml=evs.map(e=>`<div class="cal-event ${e.color}" onclick="event.stopPropagation();openEventModal('${e.id}')">${esc(e.time?e.time+' ':'')}${esc(e.title)}</div>`).join('');
-    cells+=`<div class="cal-cell ${isToday?'today':''}" onclick="openEventModal(null,'${dateStr}')"><div class="cal-day-num">${d}</div>${evHtml}</div>`;
+    let cellContent='';
+
+    // Events filter
+    if(data.calFilters.events){
+      const evs=(data.events||[]).filter(e=>e.date===dateStr);
+      cellContent+=evs.map(e=>`<div class="cal-event ${e.color}" onclick="event.stopPropagation();openEventModal('${e.id}')">${esc(e.time?e.time+' ':'')}${esc(e.title)}</div>`).join('');
+    }
+
+    // Focus filter — show focus items for this date
+    if(data.calFilters.focus){
+      const focusItems=(data.focus||[]).filter(f=>f.date===dateStr);
+      if(focusItems.length>0){
+        cellContent+=focusItems.map(f=>`<div class="cal-event green" onclick="event.stopPropagation();openDayPlanner('${dateStr}')">📌 ${esc(f.text)}</div>`).join('');
+      }
+    }
+
+    // Calls filter — show call count for this date
+    if(data.calFilters.calls){
+      const dayCalls=(data.calls||[]).filter(c=>c.date===dateStr);
+      if(dayCalls.length>0){
+        cellContent+=`<div class="cal-event" style="background:#ff760011;border-left:2px solid #ff7600;color:#ff9633" onclick="event.stopPropagation()">📞 ${dayCalls.length} call${dayCalls.length===1?'':'s'}</div>`;
+      }
+    }
+
+    // Birthdays filter — show contacts with bday on this month/day
+    if(data.calFilters.birthdays){
+      const mStr=String(calMonth+1).padStart(2,'0');
+      const dStr=String(d).padStart(2,'0');
+      const bdayContacts=(data.network||[]).filter(c=>{
+        if(!c.bday)return false;
+        const parts=c.bday.split('/');
+        if(parts.length<2)return false;
+        const bMo=String(parseInt(parts[0])).padStart(2,'0');
+        const bDay=String(parseInt(parts[1])).padStart(2,'0');
+        return bMo===mStr&&bDay===dStr;
+      });
+      cellContent+=bdayContacts.map(c=>`<div class="cal-event gold" onclick="event.stopPropagation()">🎂 ${esc(c.name)}</div>`).join('');
+    }
+
+    // Day plan task badge — show pending tasks indicator
+    const pendingTasks=(data.dayPlan&&data.dayPlan[dateStr]&&data.dayPlan[dateStr].tasks)?data.dayPlan[dateStr].tasks.filter(t=>!t.done).length:0;
+    const taskBadge=pendingTasks>0?`<div style="display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:700;color:var(--gold);background:var(--gold-dim);border-radius:4px;padding:1px 5px;margin-bottom:2px">📌 ${pendingTasks}</div>`:'';
+
+    cells+=`<div class="cal-cell ${isToday?'today':''}" onclick="openDayPlanner('${dateStr}')"><div class="cal-day-num">${d}</div>${taskBadge}${cellContent}</div>`;
   }
   const remaining=42-first-days;
   for(let d=1;d<=remaining;d++){
@@ -1189,6 +1272,161 @@ function deleteEvent(){
   if(!id||!confirm('Delete this event?'))return;
   data.events=data.events.filter(e=>e.id!==id);
   save();closeModal('event-modal');renderCalendar();
+}
+
+// ===== DAY PLANNER =====
+var dayPlanDate=today();
+
+function openDayPlanner(dateStr){
+  dayPlanDate=dateStr;
+  renderDayPlanner();
+  openModal('day-planner-modal');
+}
+
+function renderDayPlanner(){
+  if(!data.dayPlan)data.dayPlan={};
+  if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
+  const plan=data.dayPlan[dayPlanDate];
+  const d=new Date(dayPlanDate+'T12:00:00');
+  const dayName=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  // Header
+  document.getElementById('dp-header').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn-icon" onclick="dayPlanNav(-1)">‹</button>
+        <div style="font-size:16px;font-weight:700">${dayName}</div>
+        <button class="btn-icon" onclick="dayPlanNav(1)">›</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('day-planner-modal');openEventModal(null,'${dayPlanDate}')">+ Event</button>
+        <button class="btn-icon" onclick="closeModal('day-planner-modal')" style="font-size:16px;font-weight:700;color:var(--muted2)">✕</button>
+      </div>
+    </div>
+  `;
+
+  // Tasks section
+  const pending=(plan.tasks||[]).filter(t=>!t.done);
+  const done=(plan.tasks||[]).filter(t=>t.done);
+  const allTasks=[...pending,...done];
+  document.getElementById('dp-tasks').innerHTML=`
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px">📌 Must Do Today</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input id="dp-task-input" type="text" placeholder="Add a must-do task..." style="flex:1" onkeydown="if(event.key==='Enter')addDayTask()">
+        <button class="btn btn-gold btn-sm" onclick="addDayTask()">Add Task</button>
+      </div>
+      <div id="dp-task-list">
+        ${allTasks.length===0
+          ?'<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing scheduled yet. Add your must-dos.</div>'
+          :allTasks.map(t=>`
+            <div class="dp-task-item">
+              <div class="dp-task-check ${t.done?'done':''}" onclick="toggleDayTask('${t.id}')">${t.done?'✓':''}</div>
+              <div class="dp-task-text ${t.done?'done':''}">${esc(t.text)}</div>
+              <button class="btn-icon" style="width:24px;height:24px;font-size:12px" onclick="deleteDayTask('${t.id}')">×</button>
+            </div>
+          `).join('')}
+      </div>
+    </div>
+  `;
+
+  // Schedule section — 6 AM to 10 PM
+  const hours=[];
+  for(let h=6;h<=22;h++){hours.push(h);}
+  const scheduleRows=hours.map(h=>{
+    const hourKey=String(h).padStart(2,'0')+':00';
+    const label=h===12?'12 PM':h<12?h+' AM':(h-12)+' PM';
+    const slots=(plan.slots&&plan.slots[hourKey])||[];
+    // Pull calendar events matching this date+hour
+    const evs=(data.events||[]).filter(e=>{
+      if(e.date!==dayPlanDate)return false;
+      if(!e.time)return false;
+      const evH=parseInt(e.time.split(':')[0]);
+      return evH===h;
+    });
+    const evHtml=evs.map(e=>`
+      <div class="dp-slot-item" style="background:#448aff11;border-left:2px solid var(--blue);border-radius:6px">
+        <span style="color:var(--blue);font-size:12px">${esc(e.time)} ${esc(e.title)}</span>
+        <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="openEventModal('${e.id}')">✏</button>
+      </div>
+    `).join('');
+    const slotHtml=slots.map(s=>`
+      <div class="dp-slot-item">
+        <span>${esc(s.text)}</span>
+        <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="deleteSlotItem('${hourKey}','${s.id}')">×</button>
+      </div>
+    `).join('');
+    return`<div class="dp-hour-row">
+      <div class="dp-hour-label">${label}</div>
+      <div class="dp-hour-content">
+        ${evHtml}${slotHtml}
+        <button class="dp-add-hour" onclick="addSlotItem('${hourKey}')">+ Add</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('dp-schedule').innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Schedule</div>
+    ${scheduleRows}
+  `;
+}
+
+function dayPlanNav(dir){
+  const d=new Date(dayPlanDate+'T12:00:00');
+  d.setDate(d.getDate()+dir);
+  dayPlanDate=d.toISOString().split('T')[0];
+  if(!data.dayPlan)data.dayPlan={};
+  if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
+  renderDayPlanner();
+}
+
+function addDayTask(){
+  const inp=document.getElementById('dp-task-input');
+  const text=inp.value.trim();
+  if(!text)return;
+  if(!data.dayPlan)data.dayPlan={};
+  if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
+  data.dayPlan[dayPlanDate].tasks.push({id:uid(),text,done:false});
+  save();
+  inp.value='';
+  renderDayPlanner();
+}
+
+function toggleDayTask(id){
+  if(!data.dayPlan||!data.dayPlan[dayPlanDate])return;
+  const t=data.dayPlan[dayPlanDate].tasks.find(x=>x.id===id);
+  if(t){t.done=!t.done;save();renderDayPlanner();}
+}
+
+function deleteDayTask(id){
+  if(!data.dayPlan||!data.dayPlan[dayPlanDate])return;
+  data.dayPlan[dayPlanDate].tasks=data.dayPlan[dayPlanDate].tasks.filter(x=>x.id!==id);
+  save();renderDayPlanner();
+}
+
+function addSlotItem(hourKey){
+  const text=prompt('Add to '+hourKey+' slot:');
+  if(!text||!text.trim())return;
+  if(!data.dayPlan)data.dayPlan={};
+  if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
+  if(!data.dayPlan[dayPlanDate].slots)data.dayPlan[dayPlanDate].slots={};
+  if(!data.dayPlan[dayPlanDate].slots[hourKey])data.dayPlan[dayPlanDate].slots[hourKey]=[];
+  data.dayPlan[dayPlanDate].slots[hourKey].push({id:uid(),text:text.trim()});
+  save();renderDayPlanner();
+}
+
+function deleteSlotItem(hourKey,id){
+  if(!data.dayPlan||!data.dayPlan[dayPlanDate]||!data.dayPlan[dayPlanDate].slots)return;
+  const slots=data.dayPlan[dayPlanDate].slots;
+  if(slots[hourKey])slots[hourKey]=slots[hourKey].filter(x=>x.id!==id);
+  save();renderDayPlanner();
+}
+
+// ===== CALENDAR FILTERS =====
+function toggleCalFilter(key){
+  if(!data.calFilters)data.calFilters={events:true,focus:true,calls:true,birthdays:true};
+  data.calFilters[key]=!data.calFilters[key];
+  save();
+  renderCalendar();
 }
 
 // ===== GOALS =====
