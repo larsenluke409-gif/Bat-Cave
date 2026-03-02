@@ -850,6 +850,26 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   </div>
 </div>
 
+<!-- Slot Item Modal -->
+<div class="modal-overlay" id="slot-modal" onclick="if(event.target===this)closeModal('slot-modal')">
+  <div class="modal" style="width:360px">
+    <div class="modal-title">Add to Schedule</div>
+    <input type="hidden" id="slot-start-key">
+    <div style="margin-bottom:12px">
+      <label>What</label>
+      <input id="slot-text" type="text" placeholder="e.g. Client call, workout, lunch...">
+    </div>
+    <div class="modal-row">
+      <div><label>Start Time</label><input id="slot-start" type="time"></div>
+      <div><label>End Time</label><input id="slot-end" type="time"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('slot-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveSlotItem()">Add</button>
+    </div>
+  </div>
+</div>
+
 <!-- Network Touch Modal -->
 <div class="modal-overlay" id="touch-modal" onclick="if(event.target===this)closeModal('touch-modal')">
   <div class="modal">
@@ -1196,6 +1216,27 @@ function renderDayPlanner(){
     </div>
   `;
 
+  // Build span map — items stored at startKey but displayed in every slot they cover
+  const allSlotData=plan.slots||{};
+  const spanMap={};
+  Object.entries(allSlotData).forEach(([startKey,items])=>{
+    items.forEach(item=>{
+      if(item.startTime&&item.endTime){
+        const[sh,sm]=item.startTime.split(':').map(Number);
+        const[eh,em]=item.endTime.split(':').map(Number);
+        const startMins=sh*60+sm, endMins=eh*60+em;
+        for(let mins=startMins;mins<endMins;mins+=30){
+          const sk=String(Math.floor(mins/60)).padStart(2,'0')+':'+(mins%60===0?'00':'30');
+          if(!spanMap[sk])spanMap[sk]=[];
+          spanMap[sk].push({...item,isStart:mins===startMins,isEnd:mins+30>=endMins,startKey});
+        }
+      }else{
+        if(!spanMap[startKey])spanMap[startKey]=[];
+        spanMap[startKey].push({...item,isStart:true,isEnd:true,startKey});
+      }
+    });
+  });
+
   // Schedule section — 5 AM to 11 PM in 30-min slots
   const hours=[];
   for(let h=5;h<=23;h++){hours.push({h,m:0});hours.push({h,m:30});}
@@ -1204,7 +1245,7 @@ function renderDayPlanner(){
     const baseH=h===12?'12':h<12?String(h):String(h-12);
     const ampm=h<12?'AM':'PM';
     const label=m===0?`${baseH} ${ampm}`:`${baseH}:30`;
-    const slots=(plan.slots&&plan.slots[hourKey])||[];
+    const spanItems=spanMap[hourKey]||[];
     // Pull calendar events matching this date+hour+halfhour
     const evs=(data.events||[]).filter(e=>{
       if(e.date!==dayPlanDate)return false;
@@ -1214,17 +1255,24 @@ function renderDayPlanner(){
       return evH===h&&(m===0?evM<30:evM>=30);
     });
     const evHtml=evs.map(e=>`
-      <div class="dp-slot-item" style="background:#448aff11;border-left:2px solid var(--blue);border-radius:6px">
+      <div class="dp-slot-item" style="background:#448aff11;border-left:2px solid var(--blue)">
         <span style="color:var(--blue);font-size:12px">${esc(e.time)} ${esc(e.title)}</span>
         <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="openEventModal('${e.id}')">✏</button>
       </div>
     `).join('');
-    const slotHtml=slots.map(s=>`
-      <div class="dp-slot-item">
-        <span>${esc(s.text)}</span>
-        <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="deleteSlotItem('${hourKey}','${s.id}')">×</button>
-      </div>
-    `).join('');
+    const slotHtml=spanItems.map(s=>{
+      if(s.isStart){
+        const rangeLabel=s.endTime?` <span style="color:var(--muted);font-size:10px">${s.startTime}–${s.endTime}</span>`:'';
+        return`<div class="dp-slot-item" style="background:#FFB30018;border-left:3px solid var(--gold)">
+          <span style="flex:1">${esc(s.text)}${rangeLabel}</span>
+          <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="deleteSlotItem('${s.startKey}','${s.id}')">×</button>
+        </div>`;
+      }else{
+        return`<div class="dp-slot-item" style="background:#FFB30008;border-left:3px solid #FFB30044;color:var(--muted)">
+          <span style="font-size:11px;font-style:italic">↳ ${esc(s.text)}</span>
+        </div>`;
+      }
+    }).join('');
     return`<div class="dp-hour-row">
       <div class="dp-hour-label">${label}</div>
       <div class="dp-hour-content">
@@ -1273,20 +1321,35 @@ function deleteDayTask(id){
 }
 
 function addSlotItem(hourKey){
-  const text=prompt('Add to '+hourKey+' slot:');
-  if(!text||!text.trim())return;
+  document.getElementById('slot-start-key').value=hourKey;
+  document.getElementById('slot-text').value='';
+  document.getElementById('slot-start').value=hourKey;
+  // Default end time = 1 hour later
+  const[h,m]=hourKey.split(':').map(Number);
+  const endH=h+1<=23?h+1:23;
+  document.getElementById('slot-end').value=String(endH).padStart(2,'0')+':'+(m===0?'00':'30');
+  openModal('slot-modal');
+  setTimeout(()=>document.getElementById('slot-text').focus(),100);
+}
+
+function saveSlotItem(){
+  const text=document.getElementById('slot-text').value.trim();
+  if(!text)return;
+  const startTime=document.getElementById('slot-start').value;
+  const endTime=document.getElementById('slot-end').value;
+  const startKey=startTime||document.getElementById('slot-start-key').value;
   if(!data.dayPlan)data.dayPlan={};
   if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
   if(!data.dayPlan[dayPlanDate].slots)data.dayPlan[dayPlanDate].slots={};
-  if(!data.dayPlan[dayPlanDate].slots[hourKey])data.dayPlan[dayPlanDate].slots[hourKey]=[];
-  data.dayPlan[dayPlanDate].slots[hourKey].push({id:uid(),text:text.trim()});
-  save();renderDayPlanner();
+  if(!data.dayPlan[dayPlanDate].slots[startKey])data.dayPlan[dayPlanDate].slots[startKey]=[];
+  data.dayPlan[dayPlanDate].slots[startKey].push({id:uid(),text,startTime,endTime:endTime||null});
+  save();closeModal('slot-modal');renderDayPlanner();
 }
 
-function deleteSlotItem(hourKey,id){
+function deleteSlotItem(startKey,id){
   if(!data.dayPlan||!data.dayPlan[dayPlanDate]||!data.dayPlan[dayPlanDate].slots)return;
   const slots=data.dayPlan[dayPlanDate].slots;
-  if(slots[hourKey])slots[hourKey]=slots[hourKey].filter(x=>x.id!==id);
+  if(slots[startKey])slots[startKey]=slots[startKey].filter(x=>x.id!==id);
   save();renderDayPlanner();
 }
 
