@@ -230,9 +230,10 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:200;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom,0)}
 .bottom-nav::-webkit-scrollbar{display:none}
 .bottom-nav-inner{display:flex;min-width:max-content;padding:0 4px}
-.bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:60px;height:56px;border:none;background:transparent;color:var(--muted);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;font-family:'Inter',sans-serif;transition:color .15s;padding:0 4px}
-.bnav-btn .bi{font-size:20px;line-height:1}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:56px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:color .15s;padding:0 2px;flex:1}
+.bnav-btn .bi{font-size:24px;line-height:1}
 .bnav-btn.active{color:var(--gold)}
+.bottom-nav-inner{display:flex;width:100%;padding:0 4px}
 
 /* ===== DAY PLANNER ===== */
 .dp-hour-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;min-height:44px}
@@ -315,16 +316,16 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav" id="bottom-nav">
   <div class="bottom-nav-inner">
-    <button class="bnav-btn active" onclick="switchView('home')" data-bview="home"><span class="bi">🏠</span>Home</button>
-    <button class="bnav-btn" onclick="switchView('calendar')" data-bview="calendar"><span class="bi">📅</span>Calendar</button>
-    <button class="bnav-btn" onclick="switchView('goals')" data-bview="goals"><span class="bi">🎯</span>Goals</button>
-    <button class="bnav-btn" onclick="switchView('network')" data-bview="network"><span class="bi">🤝</span>Network</button>
-    <button class="bnav-btn" onclick="switchView('ideas')" data-bview="ideas"><span class="bi">💡</span>Ideas</button>
-    <button class="bnav-btn" onclick="switchView('finance')" data-bview="finance"><span class="bi">💰</span>Finance</button>
-    <button class="bnav-btn" onclick="switchView('calls')" data-bview="calls"><span class="bi">📞</span>Calls</button>
-    <button class="bnav-btn" onclick="switchView('vnotes')" data-bview="vnotes"><span class="bi">🎙</span>V.Notes</button>
-    <button class="bnav-btn" onclick="switchView('timer')" data-bview="timer"><span class="bi">⏱</span>Timer</button>
-    <button class="bnav-btn" onclick="switchView('journal')" data-bview="journal"><span class="bi">📖</span>Journal</button>
+    <button class="bnav-btn active" onclick="switchView('home')" data-bview="home"><span class="bi">🏠</span></button>
+    <button class="bnav-btn" onclick="switchView('calendar')" data-bview="calendar"><span class="bi">📅</span></button>
+    <button class="bnav-btn" onclick="switchView('goals')" data-bview="goals"><span class="bi">🎯</span></button>
+    <button class="bnav-btn" onclick="switchView('network')" data-bview="network"><span class="bi">🤝</span></button>
+    <button class="bnav-btn" onclick="switchView('ideas')" data-bview="ideas"><span class="bi">💡</span></button>
+    <button class="bnav-btn" onclick="switchView('finance')" data-bview="finance"><span class="bi">💰</span></button>
+    <button class="bnav-btn" onclick="switchView('calls')" data-bview="calls"><span class="bi">📞</span></button>
+    <button class="bnav-btn" onclick="switchView('vnotes')" data-bview="vnotes"><span class="bi">🎙</span></button>
+    <button class="bnav-btn" onclick="switchView('timer')" data-bview="timer"><span class="bi">⏱</span></button>
+    <button class="bnav-btn" onclick="switchView('journal')" data-bview="journal"><span class="bi">📖</span></button>
   </div>
 </nav>
 
