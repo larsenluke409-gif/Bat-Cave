@@ -1216,37 +1216,20 @@ function renderDayPlanner(){
     </div>
   `;
 
-  // Build span map — items stored at startKey but displayed in every slot they cover
-  const allSlotData=plan.slots||{};
-  const spanMap={};
-  Object.entries(allSlotData).forEach(([startKey,items])=>{
-    items.forEach(item=>{
-      if(item.startTime&&item.endTime){
-        const[sh,sm]=item.startTime.split(':').map(Number);
-        const[eh,em]=item.endTime.split(':').map(Number);
-        const startMins=sh*60+sm, endMins=eh*60+em;
-        for(let mins=startMins;mins<endMins;mins+=30){
-          const sk=String(Math.floor(mins/60)).padStart(2,'0')+':'+(mins%60===0?'00':'30');
-          if(!spanMap[sk])spanMap[sk]=[];
-          spanMap[sk].push({...item,isStart:mins===startMins,isEnd:mins+30>=endMins,startKey});
-        }
-      }else{
-        if(!spanMap[startKey])spanMap[startKey]=[];
-        spanMap[startKey].push({...item,isStart:true,isEnd:true,startKey});
-      }
-    });
-  });
+  // Schedule — absolute-positioned rows + solid spanning blocks
+  const SLOT_H=40;
+  const slots=[];
+  for(let h=5;h<=23;h++){slots.push({h,m:0});slots.push({h,m:30});}
+  const totalH=slots.length*SLOT_H;
 
-  // Schedule section — 5 AM to 11 PM in 30-min slots
-  const hours=[];
-  for(let h=5;h<=23;h++){hours.push({h,m:0});hours.push({h,m:30});}
-  const scheduleRows=hours.map(({h,m})=>{
+  // Build row backgrounds, time labels, and add buttons
+  const rowHtml=slots.map(({h,m},i)=>{
     const hourKey=String(h).padStart(2,'0')+':'+(m===0?'00':'30');
     const baseH=h===12?'12':h<12?String(h):String(h-12);
     const ampm=h<12?'AM':'PM';
     const label=m===0?`${baseH} ${ampm}`:`${baseH}:30`;
-    const spanItems=spanMap[hourKey]||[];
-    // Pull calendar events matching this date+hour+halfhour
+    const top=i*SLOT_H;
+    const bc=m===0?'var(--border)':'#2a2a4a55';
     const evs=(data.events||[]).filter(e=>{
       if(e.date!==dayPlanDate)return false;
       if(!e.time)return false;
@@ -1254,36 +1237,32 @@ function renderDayPlanner(){
       const evM=parseInt(e.time.split(':')[1]||0);
       return evH===h&&(m===0?evM<30:evM>=30);
     });
-    const evHtml=evs.map(e=>`
-      <div class="dp-slot-item" style="background:#448aff11;border-left:2px solid var(--blue)">
-        <span style="color:var(--blue);font-size:12px">${esc(e.time)} ${esc(e.title)}</span>
-        <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="openEventModal('${e.id}')">✏</button>
-      </div>
-    `).join('');
-    const slotHtml=spanItems.map(s=>{
-      if(s.isStart){
-        const rangeLabel=s.endTime?` <span style="color:var(--muted);font-size:10px">${s.startTime}–${s.endTime}</span>`:'';
-        return`<div class="dp-slot-item" style="background:#FFB30018;border-left:3px solid var(--gold)">
-          <span style="flex:1">${esc(s.text)}${rangeLabel}</span>
-          <button class="btn-icon" style="width:22px;height:22px;font-size:11px" onclick="deleteSlotItem('${s.startKey}','${s.id}')">×</button>
-        </div>`;
-      }else{
-        return`<div class="dp-slot-item" style="background:#FFB30008;border-left:3px solid #FFB30044;color:var(--muted)">
-          <span style="font-size:11px;font-style:italic">↳ ${esc(s.text)}</span>
-        </div>`;
-      }
-    }).join('');
-    return`<div class="dp-hour-row">
-      <div class="dp-hour-label">${label}</div>
-      <div class="dp-hour-content">
-        ${evHtml}${slotHtml}
-        <button class="dp-add-hour" onclick="addSlotItem('${hourKey}')">+ Add</button>
-      </div>
-    </div>`;
+    const evHtml=evs.map(e=>`<span style="font-size:11px;color:var(--blue);background:#448aff18;border-radius:4px;padding:1px 5px;cursor:pointer;white-space:nowrap" onclick="openEventModal('${e.id}')">${esc(e.title)}</span>`).join('');
+    return`<div style="position:absolute;top:${top}px;left:0;width:54px;height:${SLOT_H}px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;color:var(--muted);font-weight:500;border-top:1px solid ${bc};box-sizing:border-box;pointer-events:none">${label}</div><div style="position:absolute;top:${top}px;left:54px;right:0;height:${SLOT_H}px;border-top:1px solid ${bc};box-sizing:border-box;display:flex;align-items:center;padding:0 6px;gap:6px">${evHtml}<button class="dp-add-hour" style="margin-left:auto;flex-shrink:0" onclick="addSlotItem('${hourKey}')">+ Add</button></div>`;
   }).join('');
+
+  // Build solid spanning blocks
+  const allSlotData=plan.slots||{};
+  const blocksHtml=Object.entries(allSlotData).flatMap(([startKey,items])=>
+    items.map(item=>{
+      const[sh,sm]=item.startTime?item.startTime.split(':').map(Number):startKey.split(':').map(Number);
+      const startI=(sh-5)*2+(sm===0?0:1);
+      let numSlots=1;
+      if(item.endTime){
+        const[eh,em]=item.endTime.split(':').map(Number);
+        const endI=(eh-5)*2+(em===0?0:1);
+        numSlots=Math.max(1,endI-startI);
+      }
+      const top=startI*SLOT_H+2;
+      const height=numSlots*SLOT_H-4;
+      const rangeLabel=item.startTime&&item.endTime?`<span style="color:var(--muted);font-size:10px">${item.startTime}–${item.endTime}</span>`:'';
+      return`<div style="position:absolute;top:${top}px;left:58px;right:4px;height:${height}px;z-index:3;background:#FFB30022;border:1px solid #FFB30055;border-left:3px solid var(--gold);border-radius:4px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;box-sizing:border-box"><div style="display:flex;align-items:flex-start;gap:4px"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--fg);line-height:1.3">${esc(item.text)}</div>${rangeLabel}</div><button class="btn-icon" style="width:22px;height:22px;font-size:11px;flex-shrink:0" onclick="deleteSlotItem('${startKey}','${item.id}')">×</button></div></div>`;
+    })
+  ).join('');
+
   document.getElementById('dp-schedule').innerHTML=`
     <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Schedule</div>
-    ${scheduleRows}
+    <div style="position:relative;height:${totalH}px">${rowHtml}${blocksHtml}</div>
   `;
 }
 
