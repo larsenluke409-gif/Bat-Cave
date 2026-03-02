@@ -208,6 +208,28 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;animation:confetti-fall linear forwards}
 @keyframes confetti-fall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
 
+/* TIMER */
+.timer-circle{width:200px;height:200px;border-radius:50%;border:6px solid var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;position:relative;background:var(--surface2)}
+.timer-circle.running{border-color:var(--gold);box-shadow:0 0 30px #FFB30033}
+.timer-circle.break{border-color:var(--green);box-shadow:0 0 30px #4CAF5033}
+.timer-time{font-size:48px;font-weight:800;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.timer-mode{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* VOICE NOTES */
+.vn-record-btn{width:80px;height:80px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto;transition:all .2s;background:linear-gradient(135deg,var(--gold),#ff8f00);box-shadow:0 4px 24px #FFB30055}
+.vn-record-btn.recording{background:linear-gradient(135deg,#ff5252,#d32f2f);animation:voice-pulse 1s infinite}
+.vn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.vn-text{flex:1;font-size:13px;line-height:1.6;min-width:0;overflow-wrap:break-word;word-break:break-word}
+.vn-meta{font-size:11px;color:var(--muted);margin-top:5px}
+
+/* JOURNAL */
+.journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;position:relative}
+.journal-entry-time{font-size:11px;color:var(--muted);margin-bottom:8px}
+.journal-entry-text{font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word}
+
+/* BIRTHDAY CARD */
+.bday-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:var(--radius2);padding:14px 16px}
+
 /* FINANCE */
 .fin-tab-bar{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:18px}
 .fin-tab{flex:1;padding:7px 10px;border-radius:7px;border:none;background:transparent;color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
@@ -289,6 +311,10 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <button class="nav-btn" onclick="switchView('ideas')" data-view="ideas"><span>💡</span><span class="tooltip">Ideas</span></button>
   <button class="nav-btn" onclick="switchView('finance')" data-view="finance"><span>💰</span><span class="tooltip">Finance</span></button>
   <button class="nav-btn" onclick="switchView('alfred')" data-view="alfred"><span>🎩</span><span class="tooltip">Alfred</span></button>
+  <button class="nav-btn" onclick="switchView('calls')" data-view="calls"><span>📞</span><span class="tooltip">Call Logger</span></button>
+  <button class="nav-btn" onclick="switchView('vnotes')" data-view="vnotes"><span>🎙</span><span class="tooltip">Voice Notes</span></button>
+  <button class="nav-btn" onclick="switchView('timer')" data-view="timer"><span>⏱</span><span class="tooltip">Focus Timer</span></button>
+  <button class="nav-btn" onclick="switchView('journal')" data-view="journal"><span>📖</span><span class="tooltip">Journal</span></button>
 </nav>
 
 <!-- BOTTOM NAV (mobile) -->
@@ -302,6 +328,10 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <button class="bnav-btn" onclick="switchView('social')" data-bview="social"><span class="bi">📱</span>Social</button>
     <button class="bnav-btn" onclick="switchView('ideas')" data-bview="ideas"><span class="bi">💡</span>Ideas</button>
     <button class="bnav-btn" onclick="switchView('finance')" data-bview="finance"><span class="bi">💰</span>Finance</button>
+    <button class="bnav-btn" onclick="switchView('calls')" data-bview="calls"><span class="bi">📞</span>Calls</button>
+    <button class="bnav-btn" onclick="switchView('vnotes')" data-bview="vnotes"><span class="bi">🎙</span>V.Notes</button>
+    <button class="bnav-btn" onclick="switchView('timer')" data-bview="timer"><span class="bi">⏱</span>Timer</button>
+    <button class="bnav-btn" onclick="switchView('journal')" data-bview="journal"><span class="bi">📖</span>Journal</button>
   </div>
 </nav>
 
@@ -314,7 +344,8 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div class="hero-quote" id="hero-quote"></div>
   </div>
   <div class="home-body">
-    <div class="stat-grid" id="home-stats"></div>
+    <div class="stat-grid" id="home-stats" style="grid-template-columns:repeat(3,1fr)"></div>
+    <div class="bday-card" id="home-birthdays" style="display:none"></div>
     <div class="card">
       <div class="flex-between" style="margin-bottom:12px">
         <div class="section-title" style="margin:0">Today's Focus</div>
@@ -507,6 +538,96 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <div id="fin-content"></div>
 </div>
 
+
+<!-- CALL LOGGER -->
+<div id="view-calls" class="view">
+  <div class="flex-between">
+    <div>
+      <div style="font-size:20px;font-weight:800">Call Logger</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Track every conversation.</div>
+    </div>
+    <button class="btn btn-gold" onclick="openCallModal()">+ Log Call</button>
+  </div>
+  <div id="calls-stats" style="display:flex;gap:12px;align-items:center"></div>
+  <div id="calls-today-section" style="display:none">
+    <div class="section-title">Today</div>
+    <div id="calls-today-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div id="calls-earlier-section" style="display:none">
+    <div class="section-title" style="margin-top:4px">Earlier</div>
+    <div id="calls-earlier-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div id="calls-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:13px">No calls logged yet. Start tracking your conversations.</div>
+</div>
+
+<!-- VOICE NOTES -->
+<div id="view-vnotes" class="view">
+  <div>
+    <div style="font-size:20px;font-weight:800">Voice Notes</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px">Capture thoughts instantly.</div>
+  </div>
+  <div class="card" style="text-align:center;padding:28px">
+    <button class="vn-record-btn" id="vn-btn" onclick="toggleVnote()">🎙</button>
+    <div id="vn-status" style="margin-top:14px;font-size:13px;color:var(--muted)">Tap to record</div>
+    <div id="vn-interim" style="margin-top:8px;font-size:12px;color:var(--muted2);font-style:italic;min-height:18px"></div>
+  </div>
+  <div style="margin-bottom:4px">
+    <input id="vn-search" type="text" placeholder="Search notes..." oninput="renderVNotes()" style="width:100%">
+  </div>
+  <div id="vnotes-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div id="vnotes-empty" style="display:none;text-align:center;padding:32px;color:var(--muted);font-size:13px">No voice notes yet. Tap the button above to record.</div>
+</div>
+
+<!-- FOCUS TIMER -->
+<div id="view-timer" class="view">
+  <div>
+    <div style="font-size:20px;font-weight:800">Focus Timer</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px">Deep work. No excuses.</div>
+  </div>
+  <div class="card" style="padding:28px 20px;text-align:center">
+    <div class="timer-circle" id="timer-circle">
+      <div class="timer-time" id="timer-display">25:00</div>
+      <div class="timer-mode" id="timer-mode-label">Focus</div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-gold" id="timer-start-btn" onclick="timerToggle()">Start</button>
+      <button class="btn btn-ghost" onclick="timerReset()">Reset</button>
+      <button class="btn btn-ghost btn-sm" onclick="timerSkip()">Skip</button>
+    </div>
+    <div id="timer-sessions-count" style="margin-top:14px;font-size:13px;color:var(--muted)">🍅 0 sessions today</div>
+  </div>
+  <div class="card">
+    <div class="section-title">Focus Item</div>
+    <select id="timer-focus-select" onchange="selectedFocusItem=this.value" style="width:100%">
+      <option value="">— Select a focus item —</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="section-title">Sessions Today</div>
+    <div id="timer-sessions-list" style="display:flex;flex-direction:column;gap:6px"></div>
+    <div id="timer-sessions-empty" style="display:none;color:var(--muted);font-size:13px;text-align:center;padding:12px">Complete a session to see it here.</div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+<div id="view-journal" class="view">
+  <div>
+    <div style="font-size:20px;font-weight:800">Daily Journal</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px">Write it out.</div>
+  </div>
+  <div class="card">
+    <textarea id="journal-write" placeholder="What's on your mind?" style="min-height:120px;margin-bottom:10px"></textarea>
+    <button class="btn btn-gold" onclick="saveJournalEntry()" style="width:100%">Save Entry</button>
+  </div>
+  <div class="flex-between">
+    <button class="btn-icon" onclick="journalNavDay(-1)">‹</button>
+    <div id="journal-date-label" style="font-size:14px;font-weight:700"></div>
+    <button class="btn-icon" onclick="journalNavDay(1)">›</button>
+  </div>
+  <div id="journal-entry-count" style="font-size:12px;color:var(--muted);text-align:center"></div>
+  <div id="journal-entries-list" style="display:flex;flex-direction:column;gap:10px"></div>
+  <div id="journal-empty" style="display:none;text-align:center;padding:32px;color:var(--muted);font-size:13px">No entries for this day yet.</div>
+</div>
 
 </div><!-- end .app -->
 
@@ -815,6 +936,28 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   </div>
 </div>
 
+<!-- Call Logger Modal -->
+<div class="modal-overlay" id="call-modal" onclick="if(event.target===this)closeModal('call-modal')">
+  <div class="modal">
+    <div class="modal-title">📞 Log a Call</div>
+    <div style="margin-bottom:10px">
+      <label>Pick from Network (optional)</label>
+      <select id="call-contact-picker" onchange="fillCallFromContact(this.value)">
+        <option value="">— Select contact —</option>
+      </select>
+    </div>
+    <div class="modal-row">
+      <div><label>Name *</label><input id="call-name" type="text" placeholder="Who did you call?"></div>
+      <div><label>Phone</label><input id="call-phone" type="tel" placeholder="(XXX) XXX-XXXX"></div>
+    </div>
+    <div style="margin-bottom:10px"><label>Notes</label><textarea id="call-notes" placeholder="What was discussed? Next steps?" style="min-height:80px"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('call-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveCall()">Log Call</button>
+    </div>
+  </div>
+</div>
+
 <!-- Network Touch Modal -->
 <div class="modal-overlay" id="touch-modal" onclick="if(event.target===this)closeModal('touch-modal')">
   <div class="modal">
@@ -842,7 +985,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <script>
 // ===== DATA =====
 const KEY='batCave2';
-function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth()}}
+function def(){return{focus:[],events:[],goals:[],posts:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},alfred:{},apiKey:'',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[]}}
 var data=JSON.parse(localStorage.getItem(KEY)||'null')||def();
 function save(){localStorage.setItem(KEY,JSON.stringify(data));clearTimeout(window._sbTimer);window._sbTimer=setTimeout(()=>sbPush(data),2000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -860,7 +1003,7 @@ function switchView(v){
   renders[v]&&renders[v]();
   window.scrollTo(0,0);
 }
-const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,social:renderSocial,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,alfred:renderAlfred};
+const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,social:renderSocial,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,alfred:renderAlfred,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal};
 
 // ===== MODAL =====
 function openModal(id){document.getElementById(id).classList.add('active')}
@@ -893,16 +1036,27 @@ function renderHome(){
   document.getElementById('hero-quote').textContent=quotes[dayIdx%quotes.length];
   // Stats
   const active=data.goals.filter(g=>!g.done).length;
-  const due=data.network.filter(n=>{if(!n.lastTouch)return true;const d=(Date.now()-new Date(n.lastTouch))/(1000*60*60*24);return d>14}).length;
-  const posts=data.posts.filter(p=>!p.posted).length;
+  const due=(data.network||[]).filter(n=>{if(!n.lastTouch)return true;const d=(Date.now()-new Date(n.lastTouch))/(1000*60*60*24);return d>14}).length;
+  const posts=(data.posts||[]).filter(p=>!p.posted).length;
   const hotIdeas=(data.ideas||[]).filter(i=>i.hot).length;
+  const callsToday=(data.calls||[]).filter(c=>c.date===today()).length;
   document.getElementById('home-stats').innerHTML=`
     <div class="stat-card"><div class="stat-num">${active}</div><div class="stat-label">Active Goals</div></div>
     <div class="stat-card"><div class="stat-num" style="color:${due>0?'var(--red)':'var(--green)'}">${due}</div><div class="stat-label">Need Touch</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--blue)">${posts}</div><div class="stat-label">Posts Queued</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--gold)">${hotIdeas}</div><div class="stat-label">🔥 Hot Ideas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${callsToday}</div><div class="stat-label">📞 Calls Today</div></div>
   `;
   renderFocus();
+  // Birthday alerts
+  const bdays=upcomingBirthdays();
+  const bdayEl=document.getElementById('home-birthdays');
+  if(bdayEl){
+    if(bdays.length>0){
+      bdayEl.style.display='block';
+      bdayEl.innerHTML=`<div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px">🎂 Upcoming Birthdays</div>`+bdays.map(b=>`<div style="font-size:13px;padding:3px 0">• ${esc(b.name)} — ${esc(b.label)} (in ${b.diff===0?'today':b.diff+' day'+(b.diff===1?'':'s')})</div>`).join('');
+    }else{bdayEl.style.display='none';}
+  }
   startStars();
 }
 
@@ -1965,6 +2119,293 @@ Current data:
   }
 }
 
+
+// ===== CALL LOGGER =====
+function renderCalls(){
+  if(!data.calls)data.calls=[];
+  const calls=data.calls.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const todayCalls=calls.filter(c=>c.date===today());
+  const earlierCalls=calls.filter(c=>c.date!==today());
+  // Stats
+  document.getElementById('calls-stats').innerHTML=`<div class="tag tag-gold" style="font-size:13px;padding:6px 14px">📞 ${todayCalls.length} call${todayCalls.length===1?'':'s'} today</div>`;
+  // Empty
+  document.getElementById('calls-empty').style.display=calls.length===0?'block':'none';
+  // Today section
+  const todaySec=document.getElementById('calls-today-section');
+  todaySec.style.display=todayCalls.length>0?'block':'none';
+  document.getElementById('calls-today-list').innerHTML=todayCalls.map(callCard).join('');
+  // Earlier section
+  const earlierSec=document.getElementById('calls-earlier-section');
+  earlierSec.style.display=earlierCalls.length>0?'block':'none';
+  document.getElementById('calls-earlier-list').innerHTML=earlierCalls.map(callCard).join('');
+}
+function callCard(c){
+  const time=c.createdAt?new Date(c.createdAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
+  return`<div class="card-sm fade-in" style="display:flex;gap:12px;align-items:flex-start">
+    <div style="font-size:20px;margin-top:2px">📞</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:700">${esc(c.name)}</div>
+      ${c.phone?`<div style="font-size:11px;color:var(--muted)">${esc(c.phone)}</div>`:''}
+      ${c.notes?`<div style="font-size:12px;color:var(--muted2);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.notes)}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+      <span style="font-size:10px;color:var(--muted)">${esc(c.date===today()?time:c.date+' '+time)}</span>
+      <button class="btn-icon" onclick="deleteCall('${c.id}')">×</button>
+    </div>
+  </div>`;
+}
+function openCallModal(){
+  document.getElementById('call-name').value='';
+  document.getElementById('call-phone').value='';
+  document.getElementById('call-notes').value='';
+  // Populate contact picker
+  const sel=document.getElementById('call-contact-picker');
+  sel.innerHTML='<option value="">— Select contact —</option>'+(data.network||[]).map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.phone?' — '+c.phone:''}</option>`).join('');
+  openModal('call-modal');
+  setTimeout(()=>document.getElementById('call-name').focus(),100);
+}
+function fillCallFromContact(id){
+  if(!id)return;
+  const c=(data.network||[]).find(x=>x.id===id);
+  if(!c)return;
+  document.getElementById('call-name').value=c.name;
+  document.getElementById('call-phone').value=c.phone||'';
+}
+function saveCall(){
+  const name=document.getElementById('call-name').value.trim();
+  if(!name)return;
+  if(!data.calls)data.calls=[];
+  data.calls.push({id:uid(),name,phone:document.getElementById('call-phone').value.trim(),notes:document.getElementById('call-notes').value.trim(),date:today(),createdAt:new Date().toISOString()});
+  save();closeModal('call-modal');renderCalls();
+}
+function deleteCall(id){
+  if(!confirm('Delete this call log?'))return;
+  data.calls=(data.calls||[]).filter(c=>c.id!==id);
+  save();renderCalls();
+}
+
+// ===== VOICE NOTES =====
+var vnoteRecog=null,vnoteListening=false;
+function renderVNotes(){
+  if(!data.voiceNotes)data.voiceNotes=[];
+  const search=(document.getElementById('vn-search')||{value:''}).value.toLowerCase();
+  const notes=data.voiceNotes.slice().reverse().filter(n=>!search||n.text.toLowerCase().includes(search));
+  document.getElementById('vnotes-empty').style.display=notes.length===0?'block':'none';
+  document.getElementById('vnotes-list').innerHTML=notes.map(n=>{
+    const dt=new Date(n.createdAt);
+    const label=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' at '+dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    return`<div class="vn-card fade-in">
+      <div style="font-size:20px;flex-shrink:0">🎙</div>
+      <div class="vn-text">
+        ${esc(n.text)}
+        <div class="vn-meta">${esc(label)}</div>
+      </div>
+      <button class="btn-icon" onclick="deleteVNote('${n.id}')">×</button>
+    </div>`;
+  }).join('');
+}
+function toggleVnote(){
+  if(vnoteListening){stopVnote();return;}
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    document.getElementById('vn-status').textContent='Speech recognition not supported. Try Chrome.';return;
+  }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  vnoteRecog=new SR();
+  vnoteRecog.lang='en-US';
+  vnoteRecog.interimResults=true;
+  vnoteRecog.maxAlternatives=1;
+  vnoteListening=true;
+  document.getElementById('vn-btn').classList.add('recording');
+  document.getElementById('vn-status').textContent='Recording...';
+  let finalTranscript='';
+  vnoteRecog.onresult=function(e){
+    let interim='';
+    finalTranscript='';
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i].isFinal)finalTranscript+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById('vn-interim').textContent=finalTranscript||interim;
+  };
+  vnoteRecog.onend=function(){
+    stopVnote();
+    if(finalTranscript.trim()){
+      if(!data.voiceNotes)data.voiceNotes=[];
+      data.voiceNotes.push({id:uid(),text:finalTranscript.trim(),date:today(),createdAt:new Date().toISOString()});
+      save();renderVNotes();
+    }
+  };
+  vnoteRecog.onerror=function(){stopVnote();document.getElementById('vn-status').textContent='Could not hear you. Try again.';};
+  vnoteRecog.start();
+}
+function stopVnote(){
+  vnoteListening=false;
+  const btn=document.getElementById('vn-btn');
+  if(btn)btn.classList.remove('recording');
+  const st=document.getElementById('vn-status');
+  if(st)st.textContent='Tap to record';
+  const itr=document.getElementById('vn-interim');
+  if(itr)itr.textContent='';
+  if(vnoteRecog){try{vnoteRecog.stop()}catch(e){}}
+}
+function deleteVNote(id){
+  data.voiceNotes=(data.voiceNotes||[]).filter(n=>n.id!==id);
+  save();renderVNotes();
+}
+
+// ===== FOCUS TIMER =====
+var timerInterval=null,timerSeconds=25*60,timerMode='focus',timerRunning=false;
+var selectedFocusItem='';
+function renderTimer(){
+  updateTimerDisplay();
+  document.getElementById('timer-start-btn').textContent=timerRunning?'Pause':'Start';
+  const circle=document.getElementById('timer-circle');
+  circle.className='timer-circle'+(timerRunning?' running':'')+(timerMode==='break'?' break':'');
+  document.getElementById('timer-mode-label').textContent=timerMode==='focus'?'Focus':'Break';
+  // Sessions today
+  const sessions=(data.timerSessions||[]).filter(s=>s.date===today());
+  document.getElementById('timer-sessions-count').textContent='🍅 '+sessions.length+' session'+(sessions.length===1?'':'s')+' today';
+  // Sessions list
+  const listEl=document.getElementById('timer-sessions-list');
+  const emptyEl=document.getElementById('timer-sessions-empty');
+  if(sessions.length===0){listEl.innerHTML='';emptyEl.style.display='block';}
+  else{
+    emptyEl.style.display='none';
+    listEl.innerHTML=sessions.slice().reverse().map(s=>{
+      const t=new Date(s.completedAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+      return`<div class="card-sm" style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+        <span>🍅 ${esc(s.label||'Focus')}</span><span style="color:var(--muted)">${t}</span>
+      </div>`;
+    }).join('');
+  }
+  // Focus select
+  const sel=document.getElementById('timer-focus-select');
+  const todayFocus=(data.focus||[]).filter(f=>f.date===today()&&!f.done);
+  sel.innerHTML='<option value="">— Select a focus item —</option>'+todayFocus.map(f=>`<option value="${esc(f.text)}" ${selectedFocusItem===f.text?'selected':''}>${esc(f.text)}</option>`).join('');
+  if(selectedFocusItem)sel.value=selectedFocusItem;
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timerSeconds/60);
+  const s=timerSeconds%60;
+  const el=document.getElementById('timer-display');
+  if(el)el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function timerToggle(){
+  if(timerRunning){
+    clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+  }else{
+    timerRunning=true;
+    timerInterval=setInterval(timerTick,1000);
+  }
+  renderTimer();
+}
+function timerTick(){
+  timerSeconds--;
+  if(timerSeconds<=0){timerDone();return;}
+  updateTimerDisplay();
+}
+function timerDone(){
+  clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+  playBeep();
+  if(timerMode==='focus'){
+    if(!data.timerSessions)data.timerSessions=[];
+    data.timerSessions.push({date:today(),label:selectedFocusItem||'Focus',completedAt:new Date().toISOString()});
+    save();
+    timerMode='break';timerSeconds=5*60;
+  }else{
+    timerMode='focus';timerSeconds=25*60;
+  }
+  renderTimer();
+}
+function timerReset(){
+  clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+  timerSeconds=timerMode==='focus'?25*60:5*60;
+  renderTimer();
+}
+function timerSkip(){
+  clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+  timerMode=timerMode==='focus'?'break':'focus';
+  timerSeconds=timerMode==='focus'?25*60:5*60;
+  renderTimer();
+}
+function playBeep(){
+  try{
+    const ctx=new AudioContext();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.frequency.value=880;osc.type='sine';
+    gain.gain.setValueAtTime(0.3,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+1);
+  }catch(e){}
+}
+
+// ===== JOURNAL =====
+var journalDate=today();
+function renderJournal(){
+  document.getElementById('journal-write').value='';
+  renderJournalEntries();
+}
+function renderJournalEntries(){
+  if(!data.journal)data.journal=[];
+  const entries=data.journal.filter(e=>e.date===journalDate).slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  // Date label
+  const d=new Date(journalDate+'T12:00:00');
+  const isToday=journalDate===today();
+  document.getElementById('journal-date-label').textContent=isToday?'Today — '+d.toLocaleDateString('en-US',{month:'long',day:'numeric'}):d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('journal-entry-count').textContent=entries.length+' entr'+(entries.length===1?'y':'ies');
+  document.getElementById('journal-empty').style.display=entries.length===0?'block':'none';
+  document.getElementById('journal-entries-list').innerHTML=entries.map(e=>{
+    const t=new Date(e.createdAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    return`<div class="journal-entry fade-in">
+      <div class="journal-entry-time">${t}</div>
+      <div class="journal-entry-text">${esc(e.text)}</div>
+      <button class="btn-icon" style="position:absolute;top:12px;right:12px" onclick="deleteJournalEntry('${e.id}')">×</button>
+    </div>`;
+  }).join('');
+}
+function saveJournalEntry(){
+  const text=document.getElementById('journal-write').value.trim();
+  if(!text)return;
+  if(!data.journal)data.journal=[];
+  data.journal.push({id:uid(),text,date:today(),createdAt:new Date().toISOString()});
+  save();
+  document.getElementById('journal-write').value='';
+  journalDate=today();
+  renderJournalEntries();
+}
+function journalNavDay(dir){
+  const d=new Date(journalDate+'T12:00:00');
+  d.setDate(d.getDate()+dir);
+  journalDate=d.toISOString().split('T')[0];
+  renderJournalEntries();
+}
+function deleteJournalEntry(id){
+  data.journal=(data.journal||[]).filter(e=>e.id!==id);
+  save();renderJournalEntries();
+}
+
+// ===== BIRTHDAY ALERTS =====
+function upcomingBirthdays(){
+  const todayD=new Date();todayD.setHours(0,0,0,0);
+  return (data.network||[]).filter(c=>{
+    if(!c.bday)return false;
+    const parts=c.bday.split('/');
+    if(parts.length<2)return false;
+    const bday=new Date(todayD.getFullYear(),parseInt(parts[0])-1,parseInt(parts[1]));
+    if(bday<todayD)bday.setFullYear(todayD.getFullYear()+1);
+    const diff=(bday-todayD)/(1000*60*60*24);
+    return diff>=0&&diff<=7;
+  }).map(c=>{
+    const parts=c.bday.split('/');
+    const todayD2=new Date();todayD2.setHours(0,0,0,0);
+    const bday=new Date(todayD2.getFullYear(),parseInt(parts[0])-1,parseInt(parts[1]));
+    if(bday<todayD2)bday.setFullYear(todayD2.getFullYear()+1);
+    const diff=Math.round((bday-todayD2)/(1000*60*60*24));
+    return{name:c.name,bday:c.bday,diff,label:bday.toLocaleDateString('en-US',{month:'long',day:'numeric'})};
+  }).sort((a,b)=>a.diff-b.diff);
+}
 
 // ===== KEYBOARD =====
 document.addEventListener('keydown',e=>{
