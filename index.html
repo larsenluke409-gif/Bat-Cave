@@ -271,6 +271,34 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .dp-cat-pill{display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600}
 .dp-pri-high{border-left-color:#ff5252!important}
 
+/* WORK TABS */
+.work-tab-bar{display:flex;gap:0;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.work-tab-bar::-webkit-scrollbar{display:none}
+.work-tab{flex:1;min-width:64px;padding:7px 12px;border-radius:7px;border:none;background:transparent;color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;text-align:center}
+.work-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px #00000033}
+/* REVENUE / QUOTE ROWS */
+.rev-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:var(--surface2);border:1px solid var(--border)}
+.rev-amount{font-size:15px;font-weight:700;flex-shrink:0}
+/* HABIT TRACKER */
+.habit-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.habit-row:last-child{border-bottom:none}
+.habit-check-btn{width:40px;height:40px;border-radius:50%;border:2px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .2s;background:transparent}
+.habit-check-btn.checked{border-color:transparent;box-shadow:0 0 14px #FFB30066}
+.habit-streak{font-size:12px;font-weight:700;color:var(--gold);min-width:40px;text-align:center}
+.habit-heatmap{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
+.habit-dot{width:10px;height:10px;border-radius:2px}
+/* GLOBAL SEARCH */
+.search-overlay{position:fixed;inset:0;background:#00000099;z-index:3000;display:none;align-items:flex-start;justify-content:center;padding-top:60px;backdrop-filter:blur(6px)}
+.search-overlay.active{display:flex}
+.search-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;width:600px;max-width:94vw;max-height:72vh;display:flex;flex-direction:column;box-shadow:0 24px 80px #00000088}
+.search-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.search-input{flex:1;font-size:15px;background:transparent;border:none;color:var(--text);outline:none;font-family:'Inter',sans-serif}
+.search-results{overflow-y:auto;padding:8px 8px 12px}
+.search-result{padding:10px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.search-result:hover{background:var(--surface2)}
+.search-sec-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:10px 14px 4px}
+/* PRINT */
+@media print{.sidebar,.bottom-nav,.voice-btn,.sb-dot,.modal-overlay,.search-overlay{display:none!important}.view{display:block!important;padding:12px}.card{border:1px solid #ccc;margin-bottom:10px;break-inside:avoid}body,html{background:#fff;color:#000;overflow:auto;height:auto}}
 /* RESPONSIVE */
 @media(max-width:768px){
   html,body{overflow:auto;height:auto}
@@ -331,6 +359,9 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <button class="nav-btn" onclick="switchView('timer')" data-view="timer"><span>⏱</span><span class="tooltip">Focus Timer</span></button>
   <button class="nav-btn" onclick="switchView('journal')" data-view="journal"><span>📖</span><span class="tooltip">Journal</span></button>
   <div style="width:32px;height:1px;background:var(--border);margin:6px 0"></div>
+  <button class="nav-btn" onclick="switchView('habits')" data-view="habits"><span>🔥</span><span class="tooltip">Habits</span></button>
+  <button class="nav-btn" onclick="openSearch()" style="color:var(--muted)"><span>🔍</span><span class="tooltip">Search</span></button>
+  <div style="width:32px;height:1px;background:var(--border);margin:6px 0"></div>
   <button class="nav-btn" onclick="switchView('work-cv')" data-view="work-cv"><span>🎙</span><span class="tooltip">Crew Voice</span></button>
   <button class="nav-btn" onclick="switchView('work-ls')" data-view="work-ls"><span>🌿</span><span class="tooltip">Landscaping</span></button>
   <button class="nav-btn" onclick="switchView('work-ae')" data-view="work-ae"><span>🔵</span><span class="tooltip">Aerating</span></button>
@@ -349,6 +380,8 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <button class="bnav-btn" onclick="switchView('vnotes')" data-bview="vnotes"><span class="bi">🎙</span>Notes</button>
     <button class="bnav-btn" onclick="switchView('timer')" data-bview="timer"><span class="bi">⏱</span>Timer</button>
     <button class="bnav-btn" onclick="switchView('journal')" data-bview="journal"><span class="bi">📖</span>Journal</button>
+    <button class="bnav-btn" onclick="switchView('habits')" data-bview="habits"><span class="bi">🔥</span>Habits</button>
+    <button class="bnav-btn" onclick="openSearch()"><span class="bi">🔍</span>Search</button>
     <button class="bnav-btn" onclick="switchView('work-cv')" data-bview="work-cv"><span class="bi">🎙</span>CV Work</button>
     <button class="bnav-btn" onclick="switchView('work-ls')" data-bview="work-ls"><span class="bi">🌿</span>Landscape</button>
     <button class="bnav-btn" onclick="switchView('work-ae')" data-bview="work-ae"><span class="bi">🔵</span>Aerating</button>
@@ -364,7 +397,11 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div class="hero-quote" id="hero-quote"></div>
   </div>
   <div class="home-body">
-    <div class="stat-grid" id="home-stats" style="grid-template-columns:repeat(4,1fr)"></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start">
+      <div class="stat-grid" id="home-stats" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div id="home-weather" class="card" style="min-width:120px;text-align:center;padding:14px 16px"></div>
+    </div>
+    <div id="home-revenue-snap" class="card" style="display:none"></div>
     <div class="bday-card" id="home-birthdays" style="display:none"></div>
     <div class="card">
       <div class="flex-between" style="margin-bottom:12px">
@@ -577,40 +614,11 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 </div>
 
 <!-- WORK: CREW VOICE -->
-<div id="view-work-cv" class="view">
-  <div class="flex-between">
-    <div>
-      <div style="font-size:20px;font-weight:800">🎙 Crew Voice</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">Tasks, projects, and progress for Crew Voice.</div>
-    </div>
-    <button class="btn btn-gold" onclick="openWorkTask('cv')">+ Task</button>
-  </div>
-  <div id="work-cv-board"></div>
-</div>
-
+<div id="view-work-cv" class="view"><div id="work-cv-board"></div></div>
 <!-- WORK: LANDSCAPING -->
-<div id="view-work-ls" class="view">
-  <div class="flex-between">
-    <div>
-      <div style="font-size:20px;font-weight:800">🌿 Landscaping</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">Jobs, tasks, and notes for landscaping work.</div>
-    </div>
-    <button class="btn btn-gold" onclick="openWorkTask('ls')">+ Task</button>
-  </div>
-  <div id="work-ls-board"></div>
-</div>
-
+<div id="view-work-ls" class="view"><div id="work-ls-board"></div></div>
 <!-- WORK: AERATING -->
-<div id="view-work-ae" class="view">
-  <div class="flex-between">
-    <div>
-      <div style="font-size:20px;font-weight:800">🔵 Aerating</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:2px">Jobs, tasks, and notes for aerating work.</div>
-    </div>
-    <button class="btn btn-gold" onclick="openWorkTask('ae')">+ Task</button>
-  </div>
-  <div id="work-ae-board"></div>
-</div>
+<div id="view-work-ae" class="view"><div id="work-ae-board"></div></div>
 
 <!-- Work Task Modal -->
 <div class="modal-overlay" id="work-task-modal" onclick="if(event.target===this)closeModal('work-task-modal')">
@@ -639,6 +647,17 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div class="modal-row">
       <div><label>Due Date (optional)</label><input id="wtm-due" type="date"></div>
       <div>
+        <label>Recurrence</label>
+        <select id="wtm-recur">
+          <option value="none">None</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-row">
+      <div>
         <label>Tag</label>
         <select id="wtm-tag">
           <option value="">None</option>
@@ -651,6 +670,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
           <option value="Billing">Billing</option>
         </select>
       </div>
+      <div><label>Job Photo URL (optional)</label><input id="wtm-photo" type="url" placeholder="https://..."></div>
     </div>
     <div style="margin-bottom:10px"><label>Notes</label><textarea id="wtm-notes" style="min-height:60px" placeholder="Optional details..."></textarea></div>
     <div class="modal-actions">
@@ -659,6 +679,128 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
       <button class="btn btn-gold" onclick="saveWorkTask()">Save</button>
     </div>
   </div>
+</div>
+
+<!-- Revenue Entry Modal -->
+<div class="modal-overlay" id="rev-modal" onclick="if(event.target===this)closeModal('rev-modal')">
+  <div class="modal" style="width:400px">
+    <div class="modal-title" id="rev-modal-title">Log Revenue</div>
+    <input type="hidden" id="rev-id"><input type="hidden" id="rev-sec">
+    <div style="margin-bottom:10px"><label>Client / Job</label><input id="rev-client" type="text" placeholder="Client name or job description"></div>
+    <div class="modal-row">
+      <div><label>Amount ($)</label><input id="rev-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div><label>Date</label><input id="rev-date" type="date"></div>
+    </div>
+    <div class="modal-row">
+      <div>
+        <label>Status</label>
+        <select id="rev-paid">
+          <option value="paid">✅ Paid</option>
+          <option value="unpaid">⏳ Unpaid / Invoiced</option>
+          <option value="partial">💛 Partial</option>
+        </select>
+      </div>
+      <div><label>Invoice # (optional)</label><input id="rev-invoice" type="text" placeholder="#1001"></div>
+    </div>
+    <div style="margin-bottom:10px"><label>Notes</label><textarea id="rev-notes" style="min-height:50px" placeholder="Optional"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="rev-delete-btn" onclick="deleteRevEntry()" style="display:none;margin-right:auto;color:var(--red)">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('rev-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveRevEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quote Modal -->
+<div class="modal-overlay" id="quote-modal" onclick="if(event.target===this)closeModal('quote-modal')">
+  <div class="modal" style="width:400px">
+    <div class="modal-title" id="quote-modal-title">New Quote / Estimate</div>
+    <input type="hidden" id="quote-id"><input type="hidden" id="quote-sec">
+    <div style="margin-bottom:10px"><label>Client / Property</label><input id="quote-client" type="text" placeholder="Client name"></div>
+    <div class="modal-row">
+      <div><label>Amount ($)</label><input id="quote-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div><label>Date Sent</label><input id="quote-date" type="date"></div>
+    </div>
+    <div style="margin-bottom:10px">
+      <label>Status</label>
+      <select id="quote-status">
+        <option value="pending">🟡 Pending</option>
+        <option value="accepted">✅ Accepted</option>
+        <option value="declined">❌ Declined</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px"><label>Scope / Notes</label><textarea id="quote-notes" style="min-height:60px" placeholder="What does this cover?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="quote-delete-btn" onclick="deleteQuote()" style="display:none;margin-right:auto;color:var(--red)">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('quote-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveQuote()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Habit Modal -->
+<div class="modal-overlay" id="habit-modal" onclick="if(event.target===this)closeModal('habit-modal')">
+  <div class="modal" style="width:360px">
+    <div class="modal-title" id="hm-title">New Habit</div>
+    <input type="hidden" id="hm-id">
+    <div style="margin-bottom:10px"><label>Habit Name</label><input id="hm-name" type="text" placeholder="e.g. Cold Calls, Workout, Read..."></div>
+    <div class="modal-row">
+      <div><label>Icon (emoji)</label><input id="hm-icon" type="text" placeholder="💪" style="text-align:center;font-size:20px"></div>
+      <div>
+        <label>Color</label>
+        <select id="hm-color">
+          <option value="#FFB300">Gold</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#448aff">Blue</option>
+          <option value="#ff5252">Red</option>
+          <option value="#ce93d8">Purple</option>
+          <option value="#00bfa5">Teal</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="hm-delete-btn" onclick="deleteHabit()" style="display:none;margin-right:auto;color:var(--red)">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('habit-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveHabit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Template Name Modal -->
+<div class="modal-overlay" id="tpl-modal" onclick="if(event.target===this)closeModal('tpl-modal')">
+  <div class="modal" style="width:340px">
+    <div class="modal-title">Save as Template</div>
+    <div style="margin-bottom:14px"><label>Template Name</label><input id="tpl-name" type="text" placeholder="e.g. Typical Monday"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tpl-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveDayTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- Global Search Overlay -->
+<div class="search-overlay" id="search-overlay" onclick="if(event.target===this)closeSearch()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <span style="font-size:18px;color:var(--muted)">🔍</span>
+      <input class="search-input" id="search-input" placeholder="Search tasks, events, contacts, notes…" oninput="runSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()">
+      <button class="btn-icon" onclick="closeSearch()" style="flex-shrink:0">✕</button>
+    </div>
+    <div class="search-results" id="search-results"><div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Start typing to search…</div></div>
+  </div>
+</div>
+
+<!-- Habits View -->
+<div id="view-habits" class="view">
+  <div class="flex-between">
+    <div>
+      <div style="font-size:20px;font-weight:800">🔥 Habits</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Daily streaks and consistency tracking.</div>
+    </div>
+    <button class="btn btn-gold" onclick="openHabitModal()">+ Habit</button>
+  </div>
+  <div id="habits-today" class="card"></div>
+  <div id="habits-history" class="card" style="display:none"></div>
 </div>
 
 </div><!-- end .app -->
@@ -753,6 +895,18 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
           <option value="ae">🔵 Aerating</option>
         </select>
       </div>
+    </div>
+    <div class="modal-row">
+      <div>
+        <label>Repeat</label>
+        <select id="event-recur">
+          <option value="none">None</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly (same date)</option>
+        </select>
+      </div>
+      <div><label>&nbsp;</label></div>
     </div>
     <div style="margin-bottom:10px"><label>Notes</label><textarea id="event-notes" style="min-height:60px" placeholder="Optional"></textarea></div>
     <div class="modal-actions">
@@ -1074,13 +1228,18 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div id="dp-header"></div>
     <div id="dp-tasks" style="margin-bottom:20px"></div>
     <div id="dp-schedule"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+      <button class="btn btn-ghost btn-sm" onclick="openModal('tpl-modal')">💾 Save as Template</button>
+      <button class="btn btn-ghost btn-sm" onclick="openLoadTemplate()">📂 Load Template</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportDayPlannerPDF()" style="margin-left:auto">🖨 Print Day</button>
+    </div>
   </div>
 </div>
 
 <script>
 // ===== DATA =====
 const KEY='batCave2';
-function def(){return{focus:[],events:[],goals:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[],dayPlan:{},calFilters:{events:true,focus:true,calls:true,birthdays:true}}}
+function def(){return{focus:[],events:[],goals:[],network:[],ideas:[],finance:{income:[],expenses:[],budgets:{Housing:1500,Food:400,Transportation:300,Utilities:200,Business:200,Health:100,Entertainment:100,Personal:100,Savings:500,Other:100},finGoals:[]},calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),calls:[],voiceNotes:[],timerSessions:[],journal:[],dayPlan:{},calFilters:{events:true,schedule:true,focus:true,calls:true,birthdays:true},workTasks:[],workNotes:{cv:'',ls:'',ae:''},workRevenue:{cv:[],ls:[],ae:[]},workQuotes:{cv:[],ls:[],ae:[]},workTab:{cv:'tasks',ls:'tasks',ae:'tasks'},habits:[],dayPlanTemplates:[],weatherCache:null}}
 var data=JSON.parse(localStorage.getItem(KEY)||'null')||def();
 function save(){localStorage.setItem(KEY,JSON.stringify(data));clearTimeout(window._sbTimer);window._sbTimer=setTimeout(()=>sbPush(data),2000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -1098,7 +1257,7 @@ function switchView(v){
   renders[v]&&renders[v]();
   window.scrollTo(0,0);
 }
-const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal,'work-cv':()=>renderWorkBoard('cv'),'work-ls':()=>renderWorkBoard('ls'),'work-ae':()=>renderWorkBoard('ae')};
+const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal,habits:renderHabits,'work-cv':()=>renderWorkBoard('cv'),'work-ls':()=>renderWorkBoard('ls'),'work-ae':()=>renderWorkBoard('ae')};
 
 // ===== MODAL =====
 function openModal(id){document.getElementById(id).classList.add('active')}
@@ -1142,6 +1301,8 @@ function renderHome(){
   `;
   renderFocus();
   renderHomeSchedule();
+  renderRevenueSnap();
+  fetchWeather();
   // Birthday alerts
   const bdays=upcomingBirthdays();
   const bdayEl=document.getElementById('home-birthdays');
@@ -1276,9 +1437,9 @@ function renderCalendar(){
     const isToday=dateStr===todayStr;
     let cellContent='';
 
-    // Events filter — show category icon + time
+    // Events filter — show category icon + time (includes recurring)
     if(data.calFilters.events){
-      const evs=(data.events||[]).filter(e=>e.date===dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      const evs=getEffectiveEvents(dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
       cellContent+=evs.map(e=>{
         const icon=CAT_ICONS[e.category]||'📅';
         const timeStr=e.time?fmtTime12(e.time)+' ':'';
@@ -1356,8 +1517,8 @@ function renderUpcoming(){
     d.setDate(d.getDate()+i);
     const dateStr=d.toISOString().split('T')[0];
     const items=[];
-    // Events
-    (data.events||[]).filter(e=>e.date===dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||'')).forEach(e=>{
+    // Events (includes recurring)
+    getEffectiveEvents(dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||'')).forEach(e=>{
       const icon=CAT_ICONS[e.category]||'📅';
       const colorMap={blue:'#448aff',gold:'#FFB300',green:'#4CAF50',red:'#ff5252',purple:'#ce93d8',teal:'#00e5c0',orange:'#ff8c3a'};
       items.push({time:e.time,label:`${icon} ${e.title}`,dot:colorMap[e.color]||'#448aff'});
@@ -1437,6 +1598,7 @@ function openEventModal(id,prefillDate){
     document.getElementById('event-category').value=ev.category||'Work';
     document.getElementById('event-color').value=ev.color||'blue';
     document.getElementById('event-worksec').value=ev.workSection||'';
+    document.getElementById('event-recur').value=ev.recurrence||'none';
     document.getElementById('event-notes').value=ev.notes||'';
   }else{
     document.getElementById('event-title').value='';
@@ -1446,6 +1608,7 @@ function openEventModal(id,prefillDate){
     document.getElementById('event-category').value='Work';
     document.getElementById('event-color').value='blue';
     document.getElementById('event-worksec').value='';
+    document.getElementById('event-recur').value='none';
     document.getElementById('event-notes').value='';
   }
   openModal('event-modal');
@@ -1455,7 +1618,8 @@ function saveEvent(){
   if(!title)return;
   const id=document.getElementById('event-id').value;
   const workSection=document.getElementById('event-worksec').value;
-  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,endTime:document.getElementById('event-endtime').value,category:document.getElementById('event-category').value,color:document.getElementById('event-color').value,workSection,notes:document.getElementById('event-notes').value.trim()};
+  const recurrence=document.getElementById('event-recur').value;
+  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,endTime:document.getElementById('event-endtime').value,category:document.getElementById('event-category').value,color:document.getElementById('event-color').value,workSection,recurrence,notes:document.getElementById('event-notes').value.trim()};
   if(!data.events)data.events=[];
   if(id){const i=data.events.findIndex(e=>e.id===id);if(i>=0)data.events[i]=obj;}
   else data.events.push(obj);
@@ -2641,54 +2805,140 @@ function renderWorkBoard(sec){
     </div>`;
   }
 
-  // Summary bar
-  let html=`<div class="card" style="margin-bottom:0">
-    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-bottom:12px">
-      <span style="color:var(--muted)">Total: <strong style="color:var(--text)">${total}</strong></span>
-      <span style="color:var(--green2)">Done: <strong>${doneC}</strong></span>
-      <span style="color:var(--gold)">In Progress: <strong>${inprog.length}</strong></span>
-      <span style="color:var(--muted2)">To Do: <strong>${todo.length}</strong></span>
-      ${overdue>0?`<span style="color:var(--red)">⚠️ Overdue: <strong>${overdue}</strong></span>`:''}
-    </div>
-    <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px">
-      <div style="height:100%;width:${pct}%;background:${cfg.accent};border-radius:3px;transition:width .4s"></div>
-    </div>
-    <div style="font-size:11px;color:var(--muted);text-align:right">${pct}% complete</div>
+  const tab=(data.workTab||{})[sec]||'tasks';
+  const monthRevTotal=((data.workRevenue||{})[sec]||[]).filter(e=>e.date.startsWith(new Date().toISOString().slice(0,7))).reduce((s,e)=>s+e.amount,0);
+  const pendingQuotes=((data.workQuotes||{})[sec]||[]).filter(q=>q.status==='pending').length;
+
+  // Header + tab bar + action button
+  let actionBtn='';
+  if(tab==='tasks')actionBtn=`<button class="btn btn-gold btn-sm" onclick="openWorkTask('${sec}')">+ Task</button>`;
+  else if(tab==='revenue')actionBtn=`<button class="btn btn-gold btn-sm" onclick="openRevModal('${sec}')">+ Revenue</button>`;
+  else if(tab==='quotes')actionBtn=`<button class="btn btn-gold btn-sm" onclick="openQuoteModal('${sec}')">+ Quote</button>`;
+  else if(tab==='notes')actionBtn=`<button class="btn btn-ghost btn-sm" onclick="saveWorkNotes('${sec}')">Save Notes</button>`;
+
+  let html=`<div class="flex-between" style="margin-bottom:16px">
+    <div><div style="font-size:20px;font-weight:800">${cfg.icon} ${cfg.label}</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px">${total} task${total!==1?'s':''} · $${monthRevTotal.toFixed(0)} this month · ${pendingQuotes} open quote${pendingQuotes!==1?'s':''}</div></div>
+    ${actionBtn}
+  </div>
+  <div class="work-tab-bar">
+    <button class="work-tab ${tab==='tasks'?'active':''}" onclick="switchWorkTab('${sec}','tasks')">📋 Tasks</button>
+    <button class="work-tab ${tab==='notes'?'active':''}" onclick="switchWorkTab('${sec}','notes')">📝 Notes</button>
+    <button class="work-tab ${tab==='revenue'?'active':''}" onclick="switchWorkTab('${sec}','revenue')">💰 Revenue</button>
+    <button class="work-tab ${tab==='quotes'?'active':''}" onclick="switchWorkTab('${sec}','quotes')">📋 Quotes</button>
+    <button class="work-tab" onclick="exportWorkSectionPDF('${sec}')">🖨 Export</button>
   </div>`;
 
-  // Columns
-  const renderCol=(colTasks,status)=>{
-    const st=WORK_STATUS_LABELS[status];
-    if(colTasks.length===0&&status==='done')return'';
-    return`<div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${st.color}">${st.label} <span style="background:${st.bg};padding:2px 8px;border-radius:10px;font-size:11px">${colTasks.length}</span></div>
+  if(tab==='tasks'){
+    // Summary bar
+    html+=`<div class="card" style="margin-bottom:0">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-bottom:10px">
+        <span style="color:var(--green2)">✓ Done: <strong>${doneC}</strong></span>
+        <span style="color:var(--gold)">⚡ Active: <strong>${inprog.length}</strong></span>
+        <span style="color:var(--muted2)">○ To Do: <strong>${todo.length}</strong></span>
+        ${overdue>0?`<span style="color:var(--red)">⚠️ Overdue: <strong>${overdue}</strong></span>`:''}
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${colTasks.length===0?`<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing here yet.</div>`:colTasks.sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0)||(a.due||'zz').localeCompare(b.due||'zz')).map(t=>{
-          const isOverdue=t.due&&t.due<today()&&t.status!=='done';
-          return`<div style="background:var(--surface2);border:1px solid ${t.priority==='high'?'var(--red)':isOverdue?'#ff525244':'var(--border)'};border-radius:8px;padding:12px 14px;cursor:pointer" onclick="openWorkTask('${sec}','${t.id}')">
-            <div style="display:flex;align-items:flex-start;gap:8px">
-              <div style="flex:1;min-width:0">
-                <div style="font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.4">${t.priority==='high'?'<span style="color:var(--red);font-size:10px;font-weight:700;margin-right:4px">⚡</span>':''}${esc(t.text)}</div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap">
-                  ${t.tag?`<span style="font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--muted2)">${esc(t.tag)}</span>`:''}
-                  ${t.due?`<span style="font-size:10px;font-weight:600;color:${isOverdue?'var(--red)':'var(--muted)'}">${isOverdue?'⚠️ ':''} Due ${t.due}</span>`:''}
-                </div>
-                ${t.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.notes)}</div>`:''}
-              </div>
-              <div style="display:flex;gap:4px;flex-direction:column">
-                ${WORK_STATUS_ORDER.filter(s=>s!==t.status).map(s=>`<button class="btn btn-ghost" style="font-size:10px;padding:3px 7px;min-height:unset;white-space:nowrap" onclick="event.stopPropagation();moveWorkTask('${t.id}','${s}')">${WORK_STATUS_LABELS[s].label}</button>`).join('')}
-              </div>
-            </div>
-          </div>`;
-        }).join('')}
+      <div style="height:5px;background:var(--surface2);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${cfg.accent};border-radius:3px;transition:width .4s"></div>
       </div>
     </div>`;
-  };
 
-  html+=evHtml+renderCol(inprog,'inprogress')+renderCol(todo,'todo')+renderCol(done,'done');
+    html+=evHtml;
+
+    const renderCol=(colTasks,status)=>{
+      const st=WORK_STATUS_LABELS[status];
+      if(colTasks.length===0&&status==='done')return'';
+      return`<div class="card">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${st.color};margin-bottom:12px">${st.label} <span style="background:${st.bg};padding:2px 8px;border-radius:10px;font-size:11px">${colTasks.length}</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${colTasks.length===0?`<div style="text-align:center;padding:10px;color:var(--muted);font-size:13px">Nothing here.</div>`:colTasks.sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0)||(a.due||'zz').localeCompare(b.due||'zz')).map(t=>{
+            const isOverdue=t.due&&t.due<today()&&t.status!=='done';
+            const recurIcon=t.recur&&t.recur!=='none'?`<span style="font-size:10px;color:var(--muted);margin-left:4px">🔁${t.recur}</span>`:'';
+            return`<div style="background:var(--surface2);border:1px solid ${t.priority==='high'?'var(--red)':isOverdue?'#ff525244':'var(--border)'};border-radius:8px;padding:12px 14px;cursor:pointer" onclick="openWorkTask('${sec}','${t.id}')">
+              <div style="display:flex;align-items:flex-start;gap:8px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.4">${t.priority==='high'?'<span style="color:var(--red);font-size:10px;font-weight:700;margin-right:4px">⚡</span>':''}${esc(t.text)}${recurIcon}</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                    ${t.tag?`<span style="font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--muted2)">${esc(t.tag)}</span>`:''}
+                    ${t.due?`<span style="font-size:10px;font-weight:600;color:${isOverdue?'var(--red)':'var(--muted)'}">${isOverdue?'⚠️ ':''} Due ${t.due}</span>`:''}
+                    ${t.photo?`<a href="${esc(t.photo)}" target="_blank" style="font-size:10px;color:var(--blue)" onclick="event.stopPropagation()">📸 Photo</a>`:''}
+                  </div>
+                  ${t.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.notes)}</div>`:''}
+                </div>
+                <div style="display:flex;gap:4px;flex-direction:column">
+                  ${WORK_STATUS_ORDER.filter(s=>s!==t.status).map(s=>`<button class="btn btn-ghost" style="font-size:10px;padding:3px 7px;min-height:unset;white-space:nowrap" onclick="event.stopPropagation();${s==='done'&&t.recur&&t.recur!=='none'?`markWorkTaskDone('${t.id}')`:` moveWorkTask('${t.id}','${s}')`}">${WORK_STATUS_LABELS[s].label}</button>`).join('')}
+                </div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    };
+    html+=renderCol(inprog,'inprogress')+renderCol(todo,'todo')+renderCol(done,'done');
+
+  } else if(tab==='notes'){
+    const notes=(data.workNotes||{})[sec]||'';
+    html+=`<div class="card"><textarea id="work-notes-${sec}" style="min-height:300px;font-size:13px;line-height:1.7" placeholder="Write notes, plans, ideas, client details…">${esc(notes)}</textarea></div>`;
+
+  } else if(tab==='revenue'){
+    const entries=((data.workRevenue||{})[sec]||[]).sort((a,b)=>b.date.localeCompare(a.date));
+    const total=entries.reduce((s,e)=>s+e.amount,0);
+    const paid=entries.filter(e=>e.paid==='paid').reduce((s,e)=>s+e.amount,0);
+    const unpaid=entries.filter(e=>e.paid!=='paid').reduce((s,e)=>s+e.amount,0);
+    html+=`<div class="card"><div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Total</div><div style="font-size:24px;font-weight:800;color:var(--text)">$${total.toFixed(0)}</div></div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Collected</div><div style="font-size:24px;font-weight:800;color:var(--green2)">$${paid.toFixed(0)}</div></div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Outstanding</div><div style="font-size:24px;font-weight:800;color:var(--gold)">$${unpaid.toFixed(0)}</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${entries.length===0?`<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No revenue logged yet.</div>`:entries.map(e=>{
+        const statusColors={paid:'var(--green2)',unpaid:'var(--gold)',partial:'#ff8c3a'};
+        const statusLabels={paid:'✅ Paid',unpaid:'⏳ Unpaid',partial:'💛 Partial'};
+        return`<div class="rev-row" style="cursor:pointer" onclick="openRevModal('${sec}','${e.id}')">
+          <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${esc(e.client)}</div>
+          <div style="font-size:11px;color:var(--muted)">${e.date}${e.invoice?' · #'+esc(e.invoice):''}${e.notes?' · '+esc(e.notes.substring(0,40)):''}</div></div>
+          <div style="text-align:right">
+            <div class="rev-amount" style="color:${statusColors[e.paid]||'var(--text)'}">$${e.amount.toFixed(0)}</div>
+            <div style="font-size:10px;color:${statusColors[e.paid]||'var(--muted)'}">${statusLabels[e.paid]||e.paid}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+
+  } else if(tab==='quotes'){
+    const quotes=((data.workQuotes||{})[sec]||[]).sort((a,b)=>b.date.localeCompare(a.date));
+    const pendingAmt=quotes.filter(q=>q.status==='pending').reduce((s,q)=>s+q.amount,0);
+    const wonAmt=quotes.filter(q=>q.status==='accepted').reduce((s,q)=>s+q.amount,0);
+    html+=`<div class="card"><div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Pending</div><div style="font-size:24px;font-weight:800;color:var(--gold)">$${pendingAmt.toFixed(0)}</div></div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Won</div><div style="font-size:24px;font-weight:800;color:var(--green2)">$${wonAmt.toFixed(0)}</div></div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Total Quotes</div><div style="font-size:24px;font-weight:800;color:var(--text)">${quotes.length}</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${quotes.length===0?`<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No quotes logged yet.</div>`:quotes.map(q=>{
+        const sc={pending:{c:'var(--gold)',l:'🟡 Pending'},accepted:{c:'var(--green2)',l:'✅ Accepted'},declined:{c:'var(--red)',l:'❌ Declined'}};
+        const s=sc[q.status]||{c:'var(--muted)',l:q.status};
+        return`<div class="rev-row" style="cursor:pointer" onclick="openQuoteModal('${sec}','${q.id}')">
+          <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${esc(q.client)}</div>
+          <div style="font-size:11px;color:var(--muted)">${q.date}${q.notes?' · '+esc(q.notes.substring(0,40)):''}</div></div>
+          <div style="text-align:right">
+            <div class="rev-amount" style="color:${s.c}">$${q.amount.toFixed(0)}</div>
+            <div style="font-size:10px;color:${s.c}">${s.l}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+  }
+
   el.innerHTML=html;
+}
+
+function saveWorkNotes(sec){
+  const el=document.getElementById('work-notes-'+sec);
+  if(!el)return;
+  if(!data.workNotes)data.workNotes={cv:'',ls:'',ae:''};
+  data.workNotes[sec]=el.value;
+  save();showToast('Notes saved!');
 }
 
 function openWorkTask(sec,id){
@@ -2706,6 +2956,8 @@ function openWorkTask(sec,id){
     document.getElementById('wtm-due').value=t.due||'';
     document.getElementById('wtm-tag').value=t.tag||'';
     document.getElementById('wtm-notes').value=t.notes||'';
+    document.getElementById('wtm-recur').value=t.recur||'none';
+    document.getElementById('wtm-photo').value=t.photo||'';
   }else{
     document.getElementById('wtm-text').value='';
     document.getElementById('wtm-status').value='todo';
@@ -2713,6 +2965,8 @@ function openWorkTask(sec,id){
     document.getElementById('wtm-due').value='';
     document.getElementById('wtm-tag').value='';
     document.getElementById('wtm-notes').value='';
+    document.getElementById('wtm-recur').value='none';
+    document.getElementById('wtm-photo').value='';
   }
   openModal('work-task-modal');
   setTimeout(()=>document.getElementById('wtm-text').focus(),100);
@@ -2723,7 +2977,7 @@ function saveWorkTask(){
   if(!text)return;
   const id=document.getElementById('wtm-id').value;
   const sec=document.getElementById('wtm-section').value;
-  const obj={id:id||uid(),section:sec,text,status:document.getElementById('wtm-status').value,priority:document.getElementById('wtm-priority').value,due:document.getElementById('wtm-due').value,tag:document.getElementById('wtm-tag').value,notes:document.getElementById('wtm-notes').value.trim(),createdAt:id?((data.workTasks||[]).find(x=>x.id===id)||{}).createdAt||today():today()};
+  const obj={id:id||uid(),section:sec,text,status:document.getElementById('wtm-status').value,priority:document.getElementById('wtm-priority').value,due:document.getElementById('wtm-due').value,tag:document.getElementById('wtm-tag').value,notes:document.getElementById('wtm-notes').value.trim(),recur:document.getElementById('wtm-recur').value,photo:document.getElementById('wtm-photo').value.trim(),createdAt:id?((data.workTasks||[]).find(x=>x.id===id)||{}).createdAt||today():today()};
   if(!data.workTasks)data.workTasks=[];
   if(id){const i=data.workTasks.findIndex(x=>x.id===id);if(i>=0)data.workTasks[i]=obj;}
   else data.workTasks.push(obj);
@@ -2742,6 +2996,410 @@ function moveWorkTask(id,newStatus){
   const t=(data.workTasks||[]).find(x=>x.id===id);
   if(!t)return;
   t.status=newStatus;
+  save();renderWorkBoard(t.section);
+}
+
+// ===== WORK SECTION TABS =====
+function switchWorkTab(sec,tab){
+  if(!data.workTab)data.workTab={cv:'tasks',ls:'tasks',ae:'tasks'};
+  data.workTab[sec]=tab;
+  save();
+  renderWorkBoard(sec);
+}
+
+// ===== REVENUE TRACKER =====
+function openRevModal(sec,id){
+  document.getElementById('rev-sec').value=sec;
+  document.getElementById('rev-id').value=id||'';
+  document.getElementById('rev-modal-title').textContent=id?'Edit Entry':'Log Revenue';
+  document.getElementById('rev-delete-btn').style.display=id?'inline-flex':'none';
+  if(id){
+    const e=((data.workRevenue||{})[sec]||[]).find(x=>x.id===id);
+    if(!e)return;
+    document.getElementById('rev-client').value=e.client;
+    document.getElementById('rev-amount').value=e.amount;
+    document.getElementById('rev-date').value=e.date;
+    document.getElementById('rev-paid').value=e.paid;
+    document.getElementById('rev-invoice').value=e.invoice||'';
+    document.getElementById('rev-notes').value=e.notes||'';
+  }else{
+    document.getElementById('rev-client').value='';
+    document.getElementById('rev-amount').value='';
+    document.getElementById('rev-date').value=today();
+    document.getElementById('rev-paid').value='paid';
+    document.getElementById('rev-invoice').value='';
+    document.getElementById('rev-notes').value='';
+  }
+  openModal('rev-modal');
+}
+function saveRevEntry(){
+  const sec=document.getElementById('rev-sec').value;
+  const id=document.getElementById('rev-id').value;
+  const amount=parseFloat(document.getElementById('rev-amount').value)||0;
+  const obj={id:id||uid(),client:document.getElementById('rev-client').value.trim(),amount,date:document.getElementById('rev-date').value,paid:document.getElementById('rev-paid').value,invoice:document.getElementById('rev-invoice').value.trim(),notes:document.getElementById('rev-notes').value.trim()};
+  if(!data.workRevenue)data.workRevenue={cv:[],ls:[],ae:[]};
+  if(!data.workRevenue[sec])data.workRevenue[sec]=[];
+  if(id){const i=data.workRevenue[sec].findIndex(x=>x.id===id);if(i>=0)data.workRevenue[sec][i]=obj;}
+  else data.workRevenue[sec].push(obj);
+  save();closeModal('rev-modal');renderWorkBoard(sec);
+}
+function deleteRevEntry(){
+  const sec=document.getElementById('rev-sec').value;
+  const id=document.getElementById('rev-id').value;
+  if(!id||!confirm('Delete this entry?'))return;
+  data.workRevenue[sec]=(data.workRevenue[sec]||[]).filter(x=>x.id!==id);
+  save();closeModal('rev-modal');renderWorkBoard(sec);
+}
+
+// ===== QUOTES =====
+function openQuoteModal(sec,id){
+  document.getElementById('quote-sec').value=sec;
+  document.getElementById('quote-id').value=id||'';
+  document.getElementById('quote-modal-title').textContent=id?'Edit Quote':'New Quote / Estimate';
+  document.getElementById('quote-delete-btn').style.display=id?'inline-flex':'none';
+  if(id){
+    const q=((data.workQuotes||{})[sec]||[]).find(x=>x.id===id);
+    if(!q)return;
+    document.getElementById('quote-client').value=q.client;
+    document.getElementById('quote-amount').value=q.amount;
+    document.getElementById('quote-date').value=q.date;
+    document.getElementById('quote-status').value=q.status;
+    document.getElementById('quote-notes').value=q.notes||'';
+  }else{
+    document.getElementById('quote-client').value='';
+    document.getElementById('quote-amount').value='';
+    document.getElementById('quote-date').value=today();
+    document.getElementById('quote-status').value='pending';
+    document.getElementById('quote-notes').value='';
+  }
+  openModal('quote-modal');
+}
+function saveQuote(){
+  const sec=document.getElementById('quote-sec').value;
+  const id=document.getElementById('quote-id').value;
+  const obj={id:id||uid(),client:document.getElementById('quote-client').value.trim(),amount:parseFloat(document.getElementById('quote-amount').value)||0,date:document.getElementById('quote-date').value,status:document.getElementById('quote-status').value,notes:document.getElementById('quote-notes').value.trim()};
+  if(!data.workQuotes)data.workQuotes={cv:[],ls:[],ae:[]};
+  if(!data.workQuotes[sec])data.workQuotes[sec]=[];
+  if(id){const i=data.workQuotes[sec].findIndex(x=>x.id===id);if(i>=0)data.workQuotes[sec][i]=obj;}
+  else data.workQuotes[sec].push(obj);
+  save();closeModal('quote-modal');renderWorkBoard(sec);
+}
+function deleteQuote(){
+  const sec=document.getElementById('quote-sec').value;
+  const id=document.getElementById('quote-id').value;
+  if(!id||!confirm('Delete this quote?'))return;
+  data.workQuotes[sec]=(data.workQuotes[sec]||[]).filter(x=>x.id!==id);
+  save();closeModal('quote-modal');renderWorkBoard(sec);
+}
+
+// ===== HABIT TRACKER =====
+function renderHabits(){
+  if(!data.habits)data.habits=[];
+  const t=today();
+  const el=document.getElementById('habits-today');
+  if(!el)return;
+  if(data.habits.length===0){
+    el.innerHTML=`<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">No habits yet. Add your first one.</div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div style="font-size:14px;font-weight:700;margin-bottom:16px">Today — ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+    ${data.habits.map(h=>{
+      if(!h.logs)h.logs={};
+      const done=!!h.logs[t];
+      const streak=calcHabitStreak(h);
+      const last28=getLast28(h);
+      return`<div class="habit-row">
+        <button class="habit-check-btn ${done?'checked':''}" style="${done?'background:'+h.color+';color:#000':'color:'+h.color}" onclick="toggleHabit('${h.id}')">
+          ${done?'✓':esc(h.icon||'○')}
+        </button>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px">${esc(h.name)}</div>
+          <div class="habit-heatmap">${last28.map(done2=>`<div class="habit-dot" style="background:${done2?h.color:'var(--border2)'}"></div>`).join('')}</div>
+        </div>
+        <div class="habit-streak">${streak>0?'🔥'+streak:''}</div>
+        <button class="btn-icon" style="width:28px;height:28px;font-size:12px" onclick="openHabitModal('${h.id}')">✏</button>
+      </div>`;
+    }).join('')}
+  `;
+}
+function calcHabitStreak(h){
+  let streak=0;
+  const d=new Date();
+  while(true){
+    const ds=d.toISOString().split('T')[0];
+    if(!(h.logs||{})[ds])break;
+    streak++;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function getLast28(h){
+  const out=[];
+  const d=new Date();
+  for(let i=27;i>=0;i--){
+    const dd=new Date(d);dd.setDate(dd.getDate()-i);
+    const ds=dd.toISOString().split('T')[0];
+    out.push(!!(h.logs||{})[ds]);
+  }
+  return out;
+}
+function toggleHabit(id){
+  const h=(data.habits||[]).find(x=>x.id===id);
+  if(!h)return;
+  if(!h.logs)h.logs={};
+  const t=today();
+  h.logs[t]=!h.logs[t];
+  save();renderHabits();
+}
+function openHabitModal(id){
+  document.getElementById('hm-id').value=id||'';
+  document.getElementById('hm-title').textContent=id?'Edit Habit':'New Habit';
+  document.getElementById('hm-delete-btn').style.display=id?'inline-flex':'none';
+  if(id){
+    const h=(data.habits||[]).find(x=>x.id===id);
+    if(!h)return;
+    document.getElementById('hm-name').value=h.name;
+    document.getElementById('hm-icon').value=h.icon||'';
+    document.getElementById('hm-color').value=h.color||'#FFB300';
+  }else{
+    document.getElementById('hm-name').value='';
+    document.getElementById('hm-icon').value='';
+    document.getElementById('hm-color').value='#FFB300';
+  }
+  openModal('habit-modal');
+  setTimeout(()=>document.getElementById('hm-name').focus(),100);
+}
+function saveHabit(){
+  const name=document.getElementById('hm-name').value.trim();
+  if(!name)return;
+  const id=document.getElementById('hm-id').value;
+  const obj={id:id||uid(),name,icon:document.getElementById('hm-icon').value.trim()||'●',color:document.getElementById('hm-color').value,logs:id?((data.habits||[]).find(x=>x.id===id)||{}).logs||{}:{}};
+  if(!data.habits)data.habits=[];
+  if(id){const i=data.habits.findIndex(x=>x.id===id);if(i>=0)data.habits[i]=obj;}
+  else data.habits.push(obj);
+  save();closeModal('habit-modal');renderHabits();
+}
+function deleteHabit(){
+  const id=document.getElementById('hm-id').value;
+  if(!id||!confirm('Delete this habit?'))return;
+  data.habits=(data.habits||[]).filter(x=>x.id!==id);
+  save();closeModal('habit-modal');renderHabits();
+}
+
+// ===== GLOBAL SEARCH =====
+function openSearch(){
+  document.getElementById('search-overlay').classList.add('active');
+  document.getElementById('search-input').value='';
+  document.getElementById('search-results').innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Start typing to search…</div>';
+  setTimeout(()=>document.getElementById('search-input').focus(),100);
+}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('active');}
+function runSearch(q){
+  const el=document.getElementById('search-results');
+  q=q.trim().toLowerCase();
+  if(!q){el.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Start typing to search…</div>';return;}
+  const results=[];
+  const match=str=>str&&str.toLowerCase().includes(q);
+  // Work tasks
+  (data.workTasks||[]).filter(t=>match(t.text)||match(t.notes)).forEach(t=>{
+    const cfg=WORK_SECTIONS[t.section];
+    results.push({icon:cfg.icon,title:t.text,meta:`${cfg.label} · ${t.status}`,action:`switchView('work-${t.section}');closeSearch()`});
+  });
+  // Events
+  (data.events||[]).filter(e=>match(e.title)||match(e.notes)).forEach(e=>{
+    results.push({icon:'📅',title:e.title,meta:`${e.date}${e.time?' · '+fmtTime12(e.time):''}`,action:`openEventModal('${e.id}');closeSearch()`});
+  });
+  // Network
+  (data.network||[]).filter(n=>match(n.name)||match(n.company)||match(n.notes)).forEach(n=>{
+    results.push({icon:'🤝',title:n.name,meta:n.company||'Contact',action:`switchView('network');closeSearch()`});
+  });
+  // Goals
+  (data.goals||[]).filter(g=>match(g.title)||match(g.desc)).forEach(g=>{
+    results.push({icon:'🎯',title:g.title,meta:`Goal · ${g.cat||''}`,action:`switchView('goals');closeSearch()`});
+  });
+  // Ideas
+  (data.ideas||[]).filter(i=>match(i.text)).forEach(i=>{
+    results.push({icon:'💡',title:i.text.substring(0,60)+(i.text.length>60?'…':''),meta:`Idea · ${i.cat||''}`,action:`switchView('ideas');closeSearch()`});
+  });
+  // Journal
+  (data.journal||[]).filter(j=>match(j.text)).forEach(j=>{
+    results.push({icon:'📖',title:j.text.substring(0,60)+(j.text.length>60?'…':''),meta:`Journal · ${j.date}`,action:`switchView('journal');closeSearch()`});
+  });
+  // Habits
+  (data.habits||[]).filter(h=>match(h.name)).forEach(h=>{
+    results.push({icon:h.icon||'🔥',title:h.name,meta:'Habit',action:`switchView('habits');closeSearch()`});
+  });
+  if(results.length===0){el.innerHTML=`<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">No results for "${esc(q)}"</div>`;return;}
+  el.innerHTML=results.slice(0,20).map(r=>`
+    <div class="search-result" onclick="${r.action}">
+      <span style="font-size:18px;width:26px;flex-shrink:0">${r.icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.title)}</div>
+        <div style="font-size:11px;color:var(--muted)">${esc(r.meta)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+// Keyboard shortcut: Cmd/Ctrl+K
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}});
+
+// ===== WEATHER WIDGET =====
+async function fetchWeather(){
+  if(!navigator.geolocation){renderWeather(null);return;}
+  // Check cache (30 min)
+  if(data.weatherCache&&Date.now()-data.weatherCache.ts<1800000){renderWeather(data.weatherCache);return;}
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
+    const {latitude:lat,longitude:lon}=pos.coords;
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=auto&forecast_days=1`;
+    const r=await fetch(url);
+    const d2=await r.json();
+    const wc=d2.current.weathercode;
+    const icons={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+    const wi=icons[wc]||'🌡️';
+    const cache={ts:Date.now(),icon:wi,temp:Math.round(d2.current.temperature_2m),high:Math.round(d2.daily.temperature_2m_max[0]),low:Math.round(d2.daily.temperature_2m_min[0]),wind:Math.round(d2.current.windspeed_10m)};
+    data.weatherCache=cache;save();
+    renderWeather(cache);
+  }catch(e){renderWeather(null);}
+}
+function renderWeather(w){
+  const el=document.getElementById('home-weather');
+  if(!el)return;
+  if(!w){el.innerHTML=`<div style="color:var(--muted);font-size:11px">Weather<br>unavailable</div>`;return;}
+  el.innerHTML=`
+    <div style="font-size:28px">${w.icon}</div>
+    <div style="font-size:22px;font-weight:800;margin:2px 0">${w.temp}°</div>
+    <div style="font-size:11px;color:var(--muted)">H:${w.high}° L:${w.low}°</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:2px">💨 ${w.wind}mph</div>
+  `;
+}
+
+// ===== REVENUE SNAPSHOT (home) =====
+function renderRevenueSnap(){
+  const el=document.getElementById('home-revenue-snap');
+  if(!el)return;
+  const month=new Date().toISOString().slice(0,7);
+  let totalRev=0,totalUnpaid=0,totalQuotes=0;
+  const secBreakdown=Object.entries(WORK_SECTIONS).map(([sec,cfg])=>{
+    const entries=((data.workRevenue||{})[sec]||[]).filter(e=>e.date.startsWith(month));
+    const rev=entries.reduce((s,e)=>s+e.amount,0);
+    const unpaid=entries.filter(e=>e.paid!=='paid').reduce((s,e)=>s+e.amount,0);
+    const quotes=((data.workQuotes||{})[sec]||[]).filter(q=>q.status==='pending').reduce((s,q)=>s+q.amount,0);
+    totalRev+=rev;totalUnpaid+=unpaid;totalQuotes+=quotes;
+    return{sec,cfg,rev,unpaid};
+  });
+  if(totalRev===0&&totalUnpaid===0&&totalQuotes===0){el.style.display='none';return;}
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="flex-between" style="margin-bottom:12px">
+      <div class="section-title" style="margin:0">This Month's Revenue</div>
+      <div style="font-size:16px;font-weight:800;color:var(--green2)">$${totalRev.toFixed(0)}</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      ${secBreakdown.filter(s=>s.rev>0||s.unpaid>0).map(s=>`
+        <div style="flex:1;min-width:100px;background:var(--surface2);border-radius:8px;padding:10px 12px">
+          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px">${s.cfg.icon} ${s.cfg.label}</div>
+          <div style="font-size:15px;font-weight:700;color:var(--green2)">$${s.rev.toFixed(0)}</div>
+          ${s.unpaid>0?`<div style="font-size:11px;color:var(--gold)">$${s.unpaid.toFixed(0)} unpaid</div>`:''}
+        </div>`).join('')}
+      ${totalQuotes>0?`<div style="flex:1;min-width:100px;background:var(--surface2);border-radius:8px;padding:10px 12px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px">📋 Pending Quotes</div><div style="font-size:15px;font-weight:700;color:var(--gold)">$${totalQuotes.toFixed(0)}</div></div>`:''}
+    </div>
+  `;
+}
+
+// ===== DAY PLAN TEMPLATES =====
+function saveDayTemplate(){
+  const name=document.getElementById('tpl-name').value.trim();
+  if(!name)return;
+  if(!data.dayPlanTemplates)data.dayPlanTemplates=[];
+  const plan=data.dayPlan&&data.dayPlan[dayPlanDate]?data.dayPlan[dayPlanDate]:{};
+  data.dayPlanTemplates.push({id:uid(),name,slots:JSON.parse(JSON.stringify(plan.slots||{})),tasks:JSON.parse(JSON.stringify(plan.tasks||[]))});
+  save();closeModal('tpl-modal');
+  document.getElementById('tpl-name').value='';
+  showToast('Template saved: '+name);
+}
+function openLoadTemplate(){
+  if(!data.dayPlanTemplates||data.dayPlanTemplates.length===0){alert('No templates saved yet. Use "Save as Template" to create one.');return;}
+  const names=data.dayPlanTemplates.map((t,i)=>`${i+1}. ${t.name}`).join('\n');
+  const input=prompt('Choose a template:\n'+names+'\n\nEnter the number:');
+  if(!input)return;
+  const idx=parseInt(input)-1;
+  const tpl=data.dayPlanTemplates[idx];
+  if(!tpl){alert('Invalid selection.');return;}
+  if(!confirm(`Load "${tpl.name}" into ${dayPlanDate}? This will add items to the current schedule.`))return;
+  if(!data.dayPlan)data.dayPlan={};
+  if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
+  // Merge slots
+  Object.entries(tpl.slots||{}).forEach(([key,items])=>{
+    if(!data.dayPlan[dayPlanDate].slots[key])data.dayPlan[dayPlanDate].slots[key]=[];
+    items.forEach(item=>data.dayPlan[dayPlanDate].slots[key].push({...item,id:uid()}));
+  });
+  // Merge tasks
+  (tpl.tasks||[]).forEach(t=>data.dayPlan[dayPlanDate].tasks.push({...t,id:uid(),done:false}));
+  save();renderDayPlanner();
+}
+function showToast(msg){
+  let t=document.getElementById('_toast');
+  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:13px;z-index:9999;box-shadow:0 4px 16px #00000055;pointer-events:none';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',2500);
+}
+function exportDayPlannerPDF(){
+  const win=window.open('','_blank');
+  const plan=data.dayPlan&&data.dayPlan[dayPlanDate]?data.dayPlan[dayPlanDate]:{};
+  const tasks=(plan.tasks||[]);
+  const slots=Object.values(plan.slots||{}).flat().sort((a,b)=>(a.startTime||'').localeCompare(b.startTime||''));
+  const d=new Date(dayPlanDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  win.document.write(`<!DOCTYPE html><html><head><title>Day Plan - ${d}</title><style>body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;color:#111}h1{font-size:22px;margin-bottom:4px}h2{font-size:14px;font-weight:700;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.1em;color:#555;border-bottom:1px solid #ddd;padding-bottom:4px}.row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #eee}.time{width:90px;flex-shrink:0;color:#888;font-size:13px}.text{font-size:13px}.check{display:inline-block;width:14px;height:14px;border:2px solid #333;border-radius:3px;margin-right:8px;vertical-align:middle}</style></head><body>
+    <h1>${d}</h1><h2>Tasks</h2>${tasks.length?tasks.map(t=>`<div class="row"><span class="check"></span><span class="text">${t.text}</span></div>`).join(''):'<div style="color:#aaa;font-size:13px">None</div>'}
+    <h2>Schedule</h2>${slots.length?slots.map(s=>`<div class="row"><div class="time">${s.startTime||''}${s.endTime?'–'+s.endTime:''}</div><div class="text">${s.text}</div></div>`).join(''):'<div style="color:#aaa;font-size:13px">Nothing scheduled</div>'}
+    </body></html>`);
+  win.document.close();win.print();
+}
+
+// ===== EXPORT WORK SECTION =====
+function exportWorkSectionPDF(sec){
+  const cfg=WORK_SECTIONS[sec];
+  const tasks=(data.workTasks||[]).filter(t=>t.section===sec);
+  const win=window.open('','_blank');
+  const rows=(status,label)=>{const t=tasks.filter(x=>x.status===status);return t.length?`<h2>${label}</h2>${t.map(t=>`<div class="row"><span class="check"></span><span class="text">${t.text}${t.due?' <span style="color:#888;font-size:12px">(Due: '+t.due+')</span>':''}${t.notes?'<br><span style="color:#999;font-size:12px">'+t.notes+'</span>':''}</span></div>`).join('')}`:''};
+  win.document.write(`<!DOCTYPE html><html><head><title>${cfg.label} Tasks</title><style>body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;color:#111}h1{font-size:22px}h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;border-bottom:1px solid #ddd;padding:12px 0 4px;margin-top:20px}.row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #eee}.check{width:14px;height:14px;border:2px solid #333;border-radius:3px;flex-shrink:0;margin-top:2px}.text{font-size:13px}</style></head><body>
+    <h1>${cfg.icon} ${cfg.label}</h1><div style="color:#888;font-size:13px">Printed: ${new Date().toLocaleDateString()}</div>
+    ${rows('inprogress','In Progress')}${rows('todo','To Do')}${rows('done','Done')}
+    </body></html>`);
+  win.document.close();win.print();
+}
+
+// ===== RECURRING EVENTS HELPER =====
+function getEffectiveEvents(dateStr){
+  const all=data.events||[];
+  const direct=all.filter(e=>e.date===dateStr);
+  const recurring=all.filter(e=>e.recurrence&&e.recurrence!=='none'&&e.date<=dateStr&&e.date!==dateStr).filter(e=>{
+    const start=new Date(e.date+'T12:00:00');
+    const check=new Date(dateStr+'T12:00:00');
+    const diff=Math.round((check-start)/(1000*60*60*24));
+    if(e.recurrence==='daily')return diff>0;
+    if(e.recurrence==='weekly')return diff>0&&diff%7===0;
+    if(e.recurrence==='monthly'){return check.getDate()===start.getDate()&&diff>0;}
+    return false;
+  }).map(e=>({...e,date:dateStr,_recurring:true}));
+  return[...direct,...recurring];
+}
+
+// ===== WORK TASK RECURRENCE HELPER =====
+function markWorkTaskDone(id){
+  const t=(data.workTasks||[]).find(x=>x.id===id);
+  if(!t)return;
+  t.status='done';
+  // If recurring, create next instance
+  if(t.recur&&t.recur!=='none'&&t.due){
+    const d=new Date(t.due+'T12:00:00');
+    if(t.recur==='daily')d.setDate(d.getDate()+1);
+    else if(t.recur==='weekly')d.setDate(d.getDate()+7);
+    else if(t.recur==='monthly')d.setMonth(d.getMonth()+1);
+    const nextDue=d.toISOString().split('T')[0];
+    data.workTasks.push({...t,id:uid(),status:'todo',due:nextDue});
+  }
   save();renderWorkBoard(t.section);
 }
 
