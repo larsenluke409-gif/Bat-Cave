@@ -348,6 +348,13 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
       <div class="focus-list" id="focus-list"></div>
       <div id="focus-empty" style="display:none;text-align:center;padding:16px;color:var(--muted);font-size:13px">Set up to 3 focus items for today.</div>
     </div>
+    <div class="card">
+      <div class="flex-between" style="margin-bottom:12px">
+        <div class="section-title" style="margin:0">Today's Schedule</div>
+        <button class="btn btn-ghost btn-sm" onclick="openDayPlanner(today())">Open Planner</button>
+      </div>
+      <div id="home-schedule"></div>
+    </div>
   </div>
 </div>
 
@@ -967,6 +974,7 @@ function renderHome(){
     <div class="stat-card"><div class="stat-num" style="color:var(--green)">${callsToday}</div><div class="stat-label">📞 Calls Today</div></div>
   `;
   renderFocus();
+  renderHomeSchedule();
   // Birthday alerts
   const bdays=upcomingBirthdays();
   const bdayEl=document.getElementById('home-birthdays');
@@ -993,6 +1001,40 @@ function renderFocus(){
     </div>
   `).join('');
 }
+function renderHomeSchedule(){
+  const el=document.getElementById('home-schedule');
+  if(!el)return;
+  const t=today();
+  const items=[];
+  // Slot items from day planner
+  const slots=(data.dayPlan&&data.dayPlan[t]&&data.dayPlan[t].slots)||{};
+  Object.entries(slots).forEach(([startKey,slotItems])=>{
+    (slotItems||[]).forEach(item=>{
+      items.push({time:item.startTime||startKey,text:item.text,type:'slot'});
+    });
+  });
+  // Calendar events with a set time
+  (data.events||[]).filter(e=>e.date===t&&e.time).forEach(e=>{
+    items.push({time:e.time,text:e.title,type:'event'});
+  });
+  items.sort((a,b)=>a.time.localeCompare(b.time));
+  if(items.length===0){
+    el.innerHTML=`<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing scheduled. <span style="color:var(--gold);cursor:pointer" onclick="openDayPlanner(today())">Open planner →</span></div>`;
+    return;
+  }
+  el.innerHTML=items.map(item=>{
+    const[h,m]=item.time.split(':').map(Number);
+    const ampm=h<12?'AM':'PM';
+    const displayH=h===0?12:h>12?h-12:h;
+    const timeLabel=`${displayH}:${String(m).padStart(2,'0')} ${ampm}`;
+    const icon=item.type==='event'?'📅':'⏱';
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openDayPlanner('${t}')">
+      <div style="font-size:11px;color:var(--muted);font-weight:600;min-width:64px;flex-shrink:0">${timeLabel}</div>
+      <div style="font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${esc(item.text)}</div>
+    </div>`;
+  }).join('');
+}
+
 function openAddFocus(){
   if(data.focus.filter(f=>f.date===today()).length>=3){alert('Max 3 focus items per day.');return}
   document.getElementById('focus-input').value='';
@@ -1264,6 +1306,8 @@ function renderDayPlanner(){
     <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Schedule</div>
     <div style="position:relative;height:${totalH}px">${rowHtml}${blocksHtml}</div>
   `;
+  // Keep home schedule in sync when editing today's plan
+  if(dayPlanDate===today())renderHomeSchedule();
 }
 
 function dayPlanNav(dir){
