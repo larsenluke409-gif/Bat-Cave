@@ -251,6 +251,25 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 .cal-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .cal-filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:'Inter',sans-serif;transition:all .15s}
 .cal-filter-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+/* Extra event colors */
+.cal-event.red{background:#ff525222;border-color:var(--red);color:var(--red)}
+.cal-event.purple{background:#9c27b022;border-color:#9c27b0;color:#ce93d8}
+.cal-event.teal{background:#00bfa522;border-color:#00bfa5;color:#00e5c0}
+.cal-event.orange{background:#ff660022;border-color:#ff6600;color:#ff8c3a}
+/* Upcoming section */
+.cal-upcoming-row{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cal-upcoming-row:last-child{border-bottom:none}
+.cal-upcoming-date-col{width:68px;flex-shrink:0;text-align:right}
+.cal-upcoming-date-day{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.cal-upcoming-date-num{font-size:20px;font-weight:800;line-height:1;color:var(--text)}
+.cal-upcoming-date-col.is-today .cal-upcoming-date-num{color:var(--gold)}
+.cal-upcoming-items{flex:1;display:flex;flex-direction:column;gap:5px}
+.cal-upcoming-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.cal-upcoming-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cal-upcoming-time{color:var(--muted);font-size:11px;min-width:50px;flex-shrink:0}
+/* Day planner category pills */
+.dp-cat-pill{display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600}
+.dp-pri-high{border-left-color:#ff5252!important}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -311,6 +330,10 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <button class="nav-btn" onclick="switchView('vnotes')" data-view="vnotes"><span>🎙</span><span class="tooltip">Voice Notes</span></button>
   <button class="nav-btn" onclick="switchView('timer')" data-view="timer"><span>⏱</span><span class="tooltip">Focus Timer</span></button>
   <button class="nav-btn" onclick="switchView('journal')" data-view="journal"><span>📖</span><span class="tooltip">Journal</span></button>
+  <div style="width:32px;height:1px;background:var(--border);margin:6px 0"></div>
+  <button class="nav-btn" onclick="switchView('work-cv')" data-view="work-cv"><span>🎙</span><span class="tooltip">Crew Voice</span></button>
+  <button class="nav-btn" onclick="switchView('work-ls')" data-view="work-ls"><span>🌿</span><span class="tooltip">Landscaping</span></button>
+  <button class="nav-btn" onclick="switchView('work-ae')" data-view="work-ae"><span>🔵</span><span class="tooltip">Aerating</span></button>
 </nav>
 
 <!-- BOTTOM NAV (mobile) -->
@@ -326,6 +349,9 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <button class="bnav-btn" onclick="switchView('vnotes')" data-bview="vnotes"><span class="bi">🎙</span>Notes</button>
     <button class="bnav-btn" onclick="switchView('timer')" data-bview="timer"><span class="bi">⏱</span>Timer</button>
     <button class="bnav-btn" onclick="switchView('journal')" data-bview="journal"><span class="bi">📖</span>Journal</button>
+    <button class="bnav-btn" onclick="switchView('work-cv')" data-bview="work-cv"><span class="bi">🎙</span>CV Work</button>
+    <button class="bnav-btn" onclick="switchView('work-ls')" data-bview="work-ls"><span class="bi">🌿</span>Landscape</button>
+    <button class="bnav-btn" onclick="switchView('work-ae')" data-bview="work-ae"><span class="bi">🔵</span>Aerating</button>
   </div>
 </nav>
 
@@ -361,21 +387,29 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 <!-- CALENDAR -->
 <div id="view-calendar" class="view">
   <div class="flex-between">
-    <div class="cal-header" style="margin:0">
+    <div class="cal-header" style="margin:0;display:flex;align-items:center;gap:6px">
       <button class="btn-icon" onclick="calNav(-1)">‹</button>
-      <div class="cal-month" id="cal-month-label" style="margin:0 16px"></div>
+      <div class="cal-month" id="cal-month-label" style="margin:0 8px;font-size:17px;font-weight:700"></div>
       <button class="btn-icon" onclick="calNav(1)">›</button>
+      <button class="btn btn-ghost btn-sm" onclick="calGoToday()" style="margin-left:4px">Today</button>
     </div>
     <button class="btn btn-gold btn-sm" onclick="openEventModal()">+ Event</button>
   </div>
   <div class="cal-filter-bar" id="cal-filter-bar">
     <button class="cal-filter-btn active" data-filter="events" onclick="toggleCalFilter('events')">📅 Events</button>
+    <button class="cal-filter-btn active" data-filter="schedule" onclick="toggleCalFilter('schedule')">⏱ Schedule</button>
     <button class="cal-filter-btn active" data-filter="focus" onclick="toggleCalFilter('focus')">📌 Focus</button>
     <button class="cal-filter-btn active" data-filter="calls" onclick="toggleCalFilter('calls')">📞 Calls</button>
     <button class="cal-filter-btn active" data-filter="birthdays" onclick="toggleCalFilter('birthdays')">🎂 Birthdays</button>
   </div>
   <div class="cal-grid-header" id="cal-day-names"></div>
   <div class="cal-grid" id="cal-grid"></div>
+  <div class="card" style="margin-top:4px">
+    <div class="flex-between" style="margin-bottom:12px">
+      <div class="section-title" style="margin:0">Upcoming — Next 14 Days</div>
+    </div>
+    <div id="cal-upcoming"></div>
+  </div>
 </div>
 
 <!-- GOALS -->
@@ -542,6 +576,91 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
   <div id="journal-empty" style="display:none;text-align:center;padding:32px;color:var(--muted);font-size:13px">No entries for this day yet.</div>
 </div>
 
+<!-- WORK: CREW VOICE -->
+<div id="view-work-cv" class="view">
+  <div class="flex-between">
+    <div>
+      <div style="font-size:20px;font-weight:800">🎙 Crew Voice</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Tasks, projects, and progress for Crew Voice.</div>
+    </div>
+    <button class="btn btn-gold" onclick="openWorkTask('cv')">+ Task</button>
+  </div>
+  <div id="work-cv-board"></div>
+</div>
+
+<!-- WORK: LANDSCAPING -->
+<div id="view-work-ls" class="view">
+  <div class="flex-between">
+    <div>
+      <div style="font-size:20px;font-weight:800">🌿 Landscaping</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Jobs, tasks, and notes for landscaping work.</div>
+    </div>
+    <button class="btn btn-gold" onclick="openWorkTask('ls')">+ Task</button>
+  </div>
+  <div id="work-ls-board"></div>
+</div>
+
+<!-- WORK: AERATING -->
+<div id="view-work-ae" class="view">
+  <div class="flex-between">
+    <div>
+      <div style="font-size:20px;font-weight:800">🔵 Aerating</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Jobs, tasks, and notes for aerating work.</div>
+    </div>
+    <button class="btn btn-gold" onclick="openWorkTask('ae')">+ Task</button>
+  </div>
+  <div id="work-ae-board"></div>
+</div>
+
+<!-- Work Task Modal -->
+<div class="modal-overlay" id="work-task-modal" onclick="if(event.target===this)closeModal('work-task-modal')">
+  <div class="modal">
+    <div class="modal-title" id="wtm-title">New Task</div>
+    <input type="hidden" id="wtm-id">
+    <input type="hidden" id="wtm-section">
+    <div style="margin-bottom:10px"><label>Task / Job Name</label><input id="wtm-text" type="text" placeholder="What needs to get done?"></div>
+    <div class="modal-row">
+      <div>
+        <label>Status</label>
+        <select id="wtm-status">
+          <option value="todo">To Do</option>
+          <option value="inprogress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+      <div>
+        <label>Priority</label>
+        <select id="wtm-priority">
+          <option value="normal">Normal</option>
+          <option value="high">⚡ High</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-row">
+      <div><label>Due Date (optional)</label><input id="wtm-due" type="date"></div>
+      <div>
+        <label>Tag</label>
+        <select id="wtm-tag">
+          <option value="">None</option>
+          <option value="Admin">Admin</option>
+          <option value="Sales">Sales</option>
+          <option value="Client">Client</option>
+          <option value="Operations">Operations</option>
+          <option value="Follow-up">Follow-up</option>
+          <option value="Equipment">Equipment</option>
+          <option value="Billing">Billing</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:10px"><label>Notes</label><textarea id="wtm-notes" style="min-height:60px" placeholder="Optional details..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="wtm-delete-btn" onclick="deleteWorkTask()" style="display:none;margin-right:auto;color:var(--red)">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('work-task-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveWorkTask()">Save</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- end .app -->
 
 <!-- SUPABASE LOGIN OVERLAY -->
@@ -596,14 +715,32 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div style="margin-bottom:10px"><label>Title</label><input id="event-title" type="text" placeholder="Meeting, reminder, deadline..."></div>
     <div class="modal-row">
       <div><label>Date</label><input id="event-date" type="date"></div>
-      <div><label>Time (optional)</label><input id="event-time" type="time"></div>
+      <div>
+        <label>Category</label>
+        <select id="event-category">
+          <option value="Work">💼 Work</option>
+          <option value="Personal">🙋 Personal</option>
+          <option value="Call">📞 Call</option>
+          <option value="Health">💪 Health</option>
+          <option value="Deadline">🔴 Deadline</option>
+          <option value="Other">📌 Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-row">
+      <div><label>Start Time (optional)</label><input id="event-time" type="time"></div>
+      <div><label>End Time (optional)</label><input id="event-endtime" type="time"></div>
     </div>
     <div style="margin-bottom:10px">
       <label>Color</label>
       <select id="event-color">
-        <option value="blue">Blue</option>
-        <option value="gold">Gold</option>
-        <option value="green">Green</option>
+        <option value="blue">🔵 Blue</option>
+        <option value="gold">🟡 Gold</option>
+        <option value="green">🟢 Green</option>
+        <option value="red">🔴 Red</option>
+        <option value="purple">🟣 Purple</option>
+        <option value="teal">🩵 Teal</option>
+        <option value="orange">🟠 Orange</option>
       </select>
     </div>
     <div style="margin-bottom:10px"><label>Notes</label><textarea id="event-notes" style="min-height:60px" placeholder="Optional"></textarea></div>
@@ -859,7 +996,7 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
 
 <!-- Slot Item Modal -->
 <div class="modal-overlay" id="slot-modal" onclick="if(event.target===this)closeModal('slot-modal')" style="z-index:1100">
-  <div class="modal" style="width:360px">
+  <div class="modal" style="width:380px">
     <div class="modal-title">Add to Schedule</div>
     <input type="hidden" id="slot-start-key">
     <div style="margin-bottom:12px">
@@ -869,6 +1006,25 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
     <div class="modal-row">
       <div><label>Start Time</label><input id="slot-start" type="time"></div>
       <div><label>End Time</label><input id="slot-end" type="time"></div>
+    </div>
+    <div class="modal-row">
+      <div>
+        <label>Category</label>
+        <select id="slot-cat">
+          <option value="work">💼 Work</option>
+          <option value="personal">🙋 Personal</option>
+          <option value="health">💪 Health</option>
+          <option value="break">☕ Break</option>
+          <option value="other">📌 Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Priority</label>
+        <select id="slot-priority">
+          <option value="normal">Normal</option>
+          <option value="high">⚡ High</option>
+        </select>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('slot-modal')">Cancel</button>
@@ -931,7 +1087,7 @@ function switchView(v){
   renders[v]&&renders[v]();
   window.scrollTo(0,0);
 }
-const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal};
+const renders={home:renderHome,calendar:renderCalendar,goals:renderGoals,network:renderNetwork,ideas:renderIdeas,finance:renderFinance,calls:renderCalls,vnotes:renderVNotes,timer:renderTimer,journal:renderJournal,'work-cv':()=>renderWorkBoard('cv'),'work-ls':()=>renderWorkBoard('ls'),'work-ae':()=>renderWorkBoard('ae')};
 
 // ===== MODAL =====
 function openModal(id){document.getElementById(id).classList.add('active')}
@@ -1079,9 +1235,11 @@ function startStars(){
 
 // ===== CALENDAR =====
 let calYear=data.calYear,calMonth=data.calMonth;
+const CAT_ICONS={Work:'💼',Personal:'🙋',Call:'📞',Health:'💪',Deadline:'🔴',Other:'📌'};
 function renderCalendar(){
-  // Ensure calFilters exists
-  if(!data.calFilters)data.calFilters={events:true,focus:true,calls:true,birthdays:true};
+  // Ensure calFilters exists (include new 'schedule' filter)
+  if(!data.calFilters)data.calFilters={events:true,schedule:true,focus:true,calls:true,birthdays:true};
+  if(data.calFilters.schedule===undefined)data.calFilters.schedule=true;
 
   // Sync filter button active states
   document.querySelectorAll('.cal-filter-btn').forEach(btn=>{
@@ -1107,21 +1265,32 @@ function renderCalendar(){
     const isToday=dateStr===todayStr;
     let cellContent='';
 
-    // Events filter
+    // Events filter — show category icon + time
     if(data.calFilters.events){
-      const evs=(data.events||[]).filter(e=>e.date===dateStr);
-      cellContent+=evs.map(e=>`<div class="cal-event ${e.color}" onclick="event.stopPropagation();openEventModal('${e.id}')">${esc(e.time?e.time+' ':'')}${esc(e.title)}</div>`).join('');
+      const evs=(data.events||[]).filter(e=>e.date===dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      cellContent+=evs.map(e=>{
+        const icon=CAT_ICONS[e.category]||'📅';
+        const timeStr=e.time?fmtTime12(e.time)+' ':'';
+        return`<div class="cal-event ${e.color}" onclick="event.stopPropagation();openEventModal('${e.id}')">${icon} ${esc(timeStr)}${esc(e.title)}</div>`;
+      }).join('');
     }
 
-    // Focus filter — show focus items for this date
-    if(data.calFilters.focus){
-      const focusItems=(data.focus||[]).filter(f=>f.date===dateStr);
-      if(focusItems.length>0){
-        cellContent+=focusItems.map(f=>`<div class="cal-event green" onclick="event.stopPropagation();openDayPlanner('${dateStr}')">📌 ${esc(f.text)}</div>`).join('');
+    // Schedule (day planner slot items)
+    if(data.calFilters.schedule){
+      const slots=(data.dayPlan&&data.dayPlan[dateStr]&&data.dayPlan[dateStr].slots)||{};
+      const slotItems=Object.values(slots).flat().slice(0,2);
+      if(slotItems.length){
+        cellContent+=slotItems.map(item=>`<div class="cal-event" style="background:#FFB30011;border-color:var(--gold);color:var(--gold)" onclick="event.stopPropagation();openDayPlanner('${dateStr}')">⏱ ${esc(item.text)}</div>`).join('');
       }
     }
 
-    // Calls filter — show call count for this date
+    // Focus filter
+    if(data.calFilters.focus){
+      const focusItems=(data.focus||[]).filter(f=>f.date===dateStr);
+      cellContent+=focusItems.map(f=>`<div class="cal-event green" onclick="event.stopPropagation();openDayPlanner('${dateStr}')">📌 ${esc(f.text)}</div>`).join('');
+    }
+
+    // Calls filter
     if(data.calFilters.calls){
       const dayCalls=(data.calls||[]).filter(c=>c.date===dateStr);
       if(dayCalls.length>0){
@@ -1129,7 +1298,7 @@ function renderCalendar(){
       }
     }
 
-    // Birthdays filter — show contacts with bday on this month/day
+    // Birthdays filter
     if(data.calFilters.birthdays){
       const mStr=String(calMonth+1).padStart(2,'0');
       const dStr=String(d).padStart(2,'0');
@@ -1144,17 +1313,96 @@ function renderCalendar(){
       cellContent+=bdayContacts.map(c=>`<div class="cal-event gold" onclick="event.stopPropagation()">🎂 ${esc(c.name)}</div>`).join('');
     }
 
-    // Day plan task badge — show pending tasks indicator
+    // Pending tasks badge
     const pendingTasks=(data.dayPlan&&data.dayPlan[dateStr]&&data.dayPlan[dateStr].tasks)?data.dayPlan[dateStr].tasks.filter(t=>!t.done).length:0;
-    const taskBadge=pendingTasks>0?`<div style="display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:700;color:var(--gold);background:var(--gold-dim);border-radius:4px;padding:1px 5px;margin-bottom:2px">📌 ${pendingTasks}</div>`:'';
+    const taskBadge=pendingTasks>0?`<div style="display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:700;color:var(--gold);background:var(--gold-dim);border-radius:4px;padding:1px 5px;margin-bottom:2px">✓ ${pendingTasks}</div>`:'';
 
-    cells+=`<div class="cal-cell ${isToday?'today':''}" onclick="openDayPlanner('${dateStr}')"><div class="cal-day-num">${d}</div>${taskBadge}${cellContent}</div>`;
+    cells+=`<div class="cal-cell ${isToday?'today':''}" onclick="openDayPlanner('${dateStr}')"><div class="cal-day-num">${isToday?'<span style="background:var(--gold);color:#000;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center">'+d+'</span>':d}</div>${taskBadge}${cellContent}</div>`;
   }
   const remaining=42-first-days;
   for(let d=1;d<=remaining;d++){
     cells+=`<div class="cal-cell other-month"><div class="cal-day-num">${d}</div></div>`;
   }
   document.getElementById('cal-grid').innerHTML=cells;
+  renderUpcoming();
+}
+
+function fmtTime12(t){
+  if(!t)return'';
+  const[h,m]=t.split(':').map(Number);
+  const ap=h<12?'AM':'PM';
+  const h12=h===0?12:h>12?h-12:h;
+  return`${h12}:${String(m).padStart(2,'0')} ${ap}`;
+}
+
+function renderUpcoming(){
+  const el=document.getElementById('cal-upcoming');
+  if(!el)return;
+  const t=today();
+  const rows=[];
+  for(let i=0;i<14;i++){
+    const d=new Date(t+'T12:00:00');
+    d.setDate(d.getDate()+i);
+    const dateStr=d.toISOString().split('T')[0];
+    const items=[];
+    // Events
+    (data.events||[]).filter(e=>e.date===dateStr).sort((a,b)=>(a.time||'').localeCompare(b.time||'')).forEach(e=>{
+      const icon=CAT_ICONS[e.category]||'📅';
+      const colorMap={blue:'#448aff',gold:'#FFB300',green:'#4CAF50',red:'#ff5252',purple:'#ce93d8',teal:'#00e5c0',orange:'#ff8c3a'};
+      items.push({time:e.time,label:`${icon} ${e.title}`,dot:colorMap[e.color]||'#448aff'});
+    });
+    // Slot items
+    const slots=(data.dayPlan&&data.dayPlan[dateStr]&&data.dayPlan[dateStr].slots)||{};
+    Object.values(slots).flat().forEach(item=>{
+      items.push({time:item.startTime||'',label:`⏱ ${item.text}`,dot:'#FFB300'});
+    });
+    // Focus
+    (data.focus||[]).filter(f=>f.date===dateStr).forEach(f=>{
+      items.push({time:'',label:`📌 ${f.text}`,dot:'#4CAF50'});
+    });
+    // Birthdays
+    const mStr=String(d.getMonth()+1).padStart(2,'0');
+    const dStr=String(d.getDate()).padStart(2,'0');
+    (data.network||[]).filter(c=>{
+      if(!c.bday)return false;
+      const parts=c.bday.split('/');
+      if(parts.length<2)return false;
+      return String(parseInt(parts[0])).padStart(2,'0')===mStr&&String(parseInt(parts[1])).padStart(2,'0')===dStr;
+    }).forEach(c=>items.push({time:'',label:`🎂 ${c.name}'s birthday`,dot:'#FFB300'}));
+
+    if(items.length>0){
+      items.sort((a,b)=>(a.time||'zz').localeCompare(b.time||'zz'));
+      const dayLabel=i===0?'Today':i===1?'Tomorrow':d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      rows.push({dateStr,dayLabel,isToday:i===0,items});
+    }
+  }
+  if(rows.length===0){
+    el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No upcoming events in the next 14 days.</div>`;
+    return;
+  }
+  el.innerHTML=rows.map(row=>`
+    <div class="cal-upcoming-row">
+      <div class="cal-upcoming-date-col${row.isToday?' is-today':''}">
+        <div class="cal-upcoming-date-day">${row.dayLabel.split(' ')[0]}</div>
+        <div class="cal-upcoming-date-num">${new Date(row.dateStr+'T12:00:00').getDate()}</div>
+      </div>
+      <div class="cal-upcoming-items">
+        ${row.items.map(item=>`
+          <div class="cal-upcoming-item">
+            <div class="cal-upcoming-dot" style="background:${item.dot}"></div>
+            ${item.time?`<div class="cal-upcoming-time">${fmtTime12(item.time)}</div>`:'<div class="cal-upcoming-time" style="color:transparent">——</div>'}
+            <div style="flex:1;font-size:12px;font-weight:500">${esc(item.label)}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function calGoToday(){
+  const now=new Date();
+  calYear=now.getFullYear();calMonth=now.getMonth();
+  data.calYear=calYear;data.calMonth=calMonth;save();
+  renderCalendar();
 }
 function calNav(dir){
   calMonth+=dir;
@@ -1174,12 +1422,16 @@ function openEventModal(id,prefillDate){
     document.getElementById('event-title').value=ev.title;
     document.getElementById('event-date').value=ev.date;
     document.getElementById('event-time').value=ev.time||'';
+    document.getElementById('event-endtime').value=ev.endTime||'';
+    document.getElementById('event-category').value=ev.category||'Work';
     document.getElementById('event-color').value=ev.color||'blue';
     document.getElementById('event-notes').value=ev.notes||'';
   }else{
     document.getElementById('event-title').value='';
     document.getElementById('event-date').value=prefillDate||today();
     document.getElementById('event-time').value='';
+    document.getElementById('event-endtime').value='';
+    document.getElementById('event-category').value='Work';
     document.getElementById('event-color').value='blue';
     document.getElementById('event-notes').value='';
   }
@@ -1189,17 +1441,17 @@ function saveEvent(){
   const title=document.getElementById('event-title').value.trim();
   if(!title)return;
   const id=document.getElementById('event-id').value;
-  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,color:document.getElementById('event-color').value,notes:document.getElementById('event-notes').value.trim()};
+  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,endTime:document.getElementById('event-endtime').value,category:document.getElementById('event-category').value,color:document.getElementById('event-color').value,notes:document.getElementById('event-notes').value.trim()};
   if(!data.events)data.events=[];
   if(id){const i=data.events.findIndex(e=>e.id===id);if(i>=0)data.events[i]=obj;}
   else data.events.push(obj);
-  save();closeModal('event-modal');renderCalendar();
+  save();closeModal('event-modal');renderCalendar();renderHomeSchedule();
 }
 function deleteEvent(){
   const id=document.getElementById('event-id').value;
   if(!id||!confirm('Delete this event?'))return;
   data.events=data.events.filter(e=>e.id!==id);
-  save();closeModal('event-modal');renderCalendar();
+  save();closeModal('event-modal');renderCalendar();renderHomeSchedule();
 }
 
 // ===== DAY PLANNER =====
@@ -1218,12 +1470,26 @@ function renderDayPlanner(){
   const d=new Date(dayPlanDate+'T12:00:00');
   const dayName=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 
+  // Category color map for slot blocks
+  const CAT_COLORS={work:{bg:'#448aff18',border:'#448aff55',accent:'#448aff'},personal:{bg:'#FFB30018',border:'#FFB30055',accent:'#FFB300'},health:{bg:'#4CAF5018',border:'#4CAF5055',accent:'#4CAF50'},break:{bg:'#9c27b018',border:'#9c27b055',accent:'#ce93d8'},other:{bg:'#ffffff0d',border:'var(--border2)',accent:'var(--muted2)'}};
+
+  // Day summary
+  const pendingCount=(plan.tasks||[]).filter(t=>!t.done).length;
+  const doneCount=(plan.tasks||[]).filter(t=>t.done).length;
+  const slotCount=Object.values(plan.slots||{}).reduce((a,b)=>a+b.length,0);
+  const evCount=(data.events||[]).filter(e=>e.date===dayPlanDate).length;
+  const summaryHtml=`<div style="display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap">
+    <span>✓ <strong style="color:var(--text)">${doneCount}/${pendingCount+doneCount}</strong> tasks done</span>
+    <span>⏱ <strong style="color:var(--text)">${slotCount}</strong> scheduled</span>
+    <span>📅 <strong style="color:var(--text)">${evCount}</strong> events</span>
+  </div>`;
+
   // Header
   document.getElementById('dp-header').innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
       <div style="display:flex;align-items:center;gap:8px">
         <button class="btn-icon" onclick="dayPlanNav(-1)">‹</button>
-        <div style="font-size:16px;font-weight:700">${dayName}</div>
+        <div style="font-size:15px;font-weight:700">${dayName}</div>
         <button class="btn-icon" onclick="dayPlanNav(1)">›</button>
       </div>
       <div style="display:flex;gap:8px">
@@ -1231,26 +1497,31 @@ function renderDayPlanner(){
         <button class="btn-icon" onclick="closeModal('day-planner-modal')" style="font-size:16px;font-weight:700;color:var(--muted2)">✕</button>
       </div>
     </div>
+    <div style="margin-bottom:16px;padding:10px 14px;background:var(--surface2);border-radius:8px">${summaryHtml}</div>
   `;
 
-  // Tasks section
-  const pending=(plan.tasks||[]).filter(t=>!t.done);
+  // Tasks section — with priority support
+  const pending=(plan.tasks||[]).filter(t=>!t.done).sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0));
   const done=(plan.tasks||[]).filter(t=>t.done);
   const allTasks=[...pending,...done];
   document.getElementById('dp-tasks').innerHTML=`
     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
       <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px">📌 Must Do Today</div>
-      <div style="display:flex;gap:8px;margin-bottom:14px">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
         <input id="dp-task-input" type="text" placeholder="Add a must-do task..." style="flex:1" onkeydown="if(event.key==='Enter')addDayTask()">
-        <button class="btn btn-gold btn-sm" onclick="addDayTask()">Add Task</button>
+        <select id="dp-task-priority" style="width:auto;padding:9px 8px;font-size:12px">
+          <option value="normal">Normal</option>
+          <option value="high">⚡ High</option>
+        </select>
+        <button class="btn btn-gold btn-sm" onclick="addDayTask()">Add</button>
       </div>
       <div id="dp-task-list">
         ${allTasks.length===0
-          ?'<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing scheduled yet. Add your must-dos.</div>'
+          ?'<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing yet. Add your must-dos.</div>'
           :allTasks.map(t=>`
-            <div class="dp-task-item">
+            <div class="dp-task-item" style="${t.priority==='high'&&!t.done?'border-left:3px solid var(--red);padding-left:8px':''}">
               <div class="dp-task-check ${t.done?'done':''}" onclick="toggleDayTask('${t.id}')">${t.done?'✓':''}</div>
-              <div class="dp-task-text ${t.done?'done':''}">${esc(t.text)}</div>
+              <div class="dp-task-text ${t.done?'done':''}">${t.priority==='high'&&!t.done?'<span style="color:var(--red);font-size:10px;font-weight:700;margin-right:4px">⚡HIGH</span>':''}${esc(t.text)}</div>
               <button class="btn-icon" style="width:24px;height:24px;font-size:12px" onclick="deleteDayTask('${t.id}')">×</button>
             </div>
           `).join('')}
@@ -1258,11 +1529,22 @@ function renderDayPlanner(){
     </div>
   `;
 
-  // Schedule — absolute-positioned rows + solid spanning blocks
+  // Schedule — absolute-positioned rows + solid spanning blocks + current time line
   const SLOT_H=40;
   const slots=[];
   for(let h=5;h<=23;h++){slots.push({h,m:0});slots.push({h,m:30});}
   const totalH=slots.length*SLOT_H;
+
+  // Current time red line (only for today)
+  let nowLineHtml='';
+  if(dayPlanDate===today()){
+    const now=new Date();
+    const nowH=now.getHours(),nowM=now.getMinutes();
+    if(nowH>=5&&nowH<=23){
+      const nowTop=((nowH-5)*2+(nowM<30?0:1))*SLOT_H+(nowM%30/30)*SLOT_H;
+      nowLineHtml=`<div id="dp-now-line" style="position:absolute;top:${Math.round(nowTop)}px;left:0;right:0;height:2px;background:var(--red);z-index:10;pointer-events:none"><div style="position:absolute;left:52px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--red)"></div></div>`;
+    }
+  }
 
   // Build row backgrounds, time labels, and add buttons
   const rowHtml=slots.map(({h,m},i)=>{
@@ -1279,11 +1561,11 @@ function renderDayPlanner(){
       const evM=parseInt(e.time.split(':')[1]||0);
       return evH===h&&(m===0?evM<30:evM>=30);
     });
-    const evHtml=evs.map(e=>`<span style="font-size:11px;color:var(--blue);background:#448aff18;border-radius:4px;padding:1px 5px;cursor:pointer;white-space:nowrap" onclick="openEventModal('${e.id}')">${esc(e.title)}</span>`).join('');
+    const evHtml=evs.map(e=>`<span style="font-size:11px;color:var(--blue);background:#448aff18;border-radius:4px;padding:1px 5px;cursor:pointer;white-space:nowrap" onclick="openEventModal('${e.id}')">${CAT_ICONS[e.category]||'📅'} ${esc(e.title)}</span>`).join('');
     return`<div style="position:absolute;top:${top}px;left:0;width:54px;height:${SLOT_H}px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;color:var(--muted);font-weight:500;border-top:1px solid ${bc};box-sizing:border-box;pointer-events:none">${label}</div><div style="position:absolute;top:${top}px;left:54px;right:0;height:${SLOT_H}px;border-top:1px solid ${bc};box-sizing:border-box;display:flex;align-items:center;padding:0 6px;gap:6px">${evHtml}<button class="dp-add-hour" style="margin-left:auto;flex-shrink:0" onclick="addSlotItem('${hourKey}')">+ Add</button></div>`;
   }).join('');
 
-  // Build solid spanning blocks
+  // Build solid spanning blocks with category colors
   const allSlotData=plan.slots||{};
   const blocksHtml=Object.entries(allSlotData).flatMap(([startKey,items])=>
     items.map(item=>{
@@ -1297,15 +1579,30 @@ function renderDayPlanner(){
       }
       const top=startI*SLOT_H+2;
       const height=numSlots*SLOT_H-4;
-      const rangeLabel=item.startTime&&item.endTime?`<span style="color:var(--muted);font-size:10px">${item.startTime}–${item.endTime}</span>`:'';
-      return`<div style="position:absolute;top:${top}px;left:58px;right:4px;height:${height}px;z-index:3;background:#FFB30022;border:1px solid #FFB30055;border-left:3px solid var(--gold);border-radius:4px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;box-sizing:border-box"><div style="display:flex;align-items:flex-start;gap:4px"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--fg);line-height:1.3">${esc(item.text)}</div>${rangeLabel}</div><button class="btn-icon" style="width:22px;height:22px;font-size:11px;flex-shrink:0" onclick="deleteSlotItem('${startKey}','${item.id}')">×</button></div></div>`;
+      const cc=CAT_COLORS[item.cat||'work'];
+      const rangeLabel=item.startTime&&item.endTime?`<span style="color:var(--muted);font-size:10px">${fmtTime12(item.startTime)}–${fmtTime12(item.endTime)}</span>`:'';
+      const hiPri=item.priority==='high'?`<span style="color:var(--red);font-size:9px;font-weight:700;margin-left:4px">⚡</span>`:'';
+      return`<div style="position:absolute;top:${top}px;left:58px;right:4px;height:${height}px;z-index:3;background:${cc.bg};border:1px solid ${cc.border};border-left:3px solid ${cc.accent};border-radius:4px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;box-sizing:border-box"><div style="display:flex;align-items:flex-start;gap:4px"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.3">${esc(item.text)}${hiPri}</div>${rangeLabel}</div><button class="btn-icon" style="width:22px;height:22px;font-size:11px;flex-shrink:0" onclick="deleteSlotItem('${startKey}','${item.id}')">×</button></div></div>`;
     })
   ).join('');
 
   document.getElementById('dp-schedule').innerHTML=`
     <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Schedule</div>
-    <div style="position:relative;height:${totalH}px">${rowHtml}${blocksHtml}</div>
+    <div id="dp-schedule-grid" style="position:relative;height:${totalH}px">${rowHtml}${blocksHtml}${nowLineHtml}</div>
   `;
+
+  // Auto-scroll to current time (or 8 AM if not today)
+  if(dayPlanDate===today()){
+    const now=new Date();
+    const nowH=now.getHours(),nowM=now.getMinutes();
+    if(nowH>=5&&nowH<=23){
+      const scrollTop=Math.max(0,((nowH-5)*2+(nowM<30?0:1))*SLOT_H-80);
+      setTimeout(()=>{const g=document.getElementById('dp-schedule-grid');if(g)g.closest('.modal').scrollTop=g.offsetTop+scrollTop;},50);
+    }
+  } else {
+    setTimeout(()=>{const g=document.getElementById('dp-schedule-grid');if(g)g.closest('.modal').scrollTop=g.offsetTop+(3*SLOT_H);},50);
+  }
+
   // Keep home schedule in sync when editing today's plan
   if(dayPlanDate===today())renderHomeSchedule();
 }
@@ -1323,11 +1620,14 @@ function addDayTask(){
   const inp=document.getElementById('dp-task-input');
   const text=inp.value.trim();
   if(!text)return;
+  const priEl=document.getElementById('dp-task-priority');
+  const priority=priEl?priEl.value:'normal';
   if(!data.dayPlan)data.dayPlan={};
   if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
-  data.dayPlan[dayPlanDate].tasks.push({id:uid(),text,done:false});
+  data.dayPlan[dayPlanDate].tasks.push({id:uid(),text,done:false,priority});
   save();
   inp.value='';
+  if(priEl)priEl.value='normal';
   renderDayPlanner();
 }
 
@@ -1365,7 +1665,9 @@ function saveSlotItem(){
   if(!data.dayPlan[dayPlanDate])data.dayPlan[dayPlanDate]={tasks:[],slots:{}};
   if(!data.dayPlan[dayPlanDate].slots)data.dayPlan[dayPlanDate].slots={};
   if(!data.dayPlan[dayPlanDate].slots[startKey])data.dayPlan[dayPlanDate].slots[startKey]=[];
-  data.dayPlan[dayPlanDate].slots[startKey].push({id:uid(),text,startTime,endTime:endTime||null});
+  const cat=document.getElementById('slot-cat').value;
+  const priority=document.getElementById('slot-priority').value;
+  data.dayPlan[dayPlanDate].slots[startKey].push({id:uid(),text,startTime,endTime:endTime||null,cat:cat||'work',priority:priority||'normal'});
   save();closeModal('slot-modal');renderDayPlanner();
 }
 
@@ -2277,6 +2579,127 @@ function journalNavDay(dir){
 function deleteJournalEntry(id){
   data.journal=(data.journal||[]).filter(e=>e.id!==id);
   save();renderJournalEntries();
+}
+
+// ===== WORK SECTIONS =====
+const WORK_SECTIONS={cv:{label:'Crew Voice',icon:'🎙',accent:'#448aff'},ls:{label:'Landscaping',icon:'🌿',accent:'#4CAF50'},ae:{label:'Aerating',icon:'🔵',accent:'#00bfa5'}};
+const WORK_STATUS_ORDER=['todo','inprogress','done'];
+const WORK_STATUS_LABELS={todo:{label:'To Do',color:'var(--muted2)',bg:'var(--surface2)'},inprogress:{label:'In Progress',color:'var(--gold)',bg:'var(--gold-dim)'},done:{label:'Done',color:'var(--green2)',bg:'#4CAF5018'}};
+
+function renderWorkBoard(sec){
+  const cfg=WORK_SECTIONS[sec];
+  const tasks=(data.workTasks||[]).filter(t=>t.section===sec);
+  const el=document.getElementById('work-'+sec+'-board');
+  if(!el)return;
+  const todo=tasks.filter(t=>t.status==='todo');
+  const inprog=tasks.filter(t=>t.status==='inprogress');
+  const done=tasks.filter(t=>t.status==='done');
+  const total=tasks.length,doneC=done.length;
+  const pct=total>0?Math.round(doneC/total*100):0;
+  const overdue=todo.filter(t=>t.due&&t.due<today()).length;
+
+  // Summary bar
+  let html=`<div class="card" style="margin-bottom:0">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-bottom:12px">
+      <span style="color:var(--muted)">Total: <strong style="color:var(--text)">${total}</strong></span>
+      <span style="color:var(--green2)">Done: <strong>${doneC}</strong></span>
+      <span style="color:var(--gold)">In Progress: <strong>${inprog.length}</strong></span>
+      <span style="color:var(--muted2)">To Do: <strong>${todo.length}</strong></span>
+      ${overdue>0?`<span style="color:var(--red)">⚠️ Overdue: <strong>${overdue}</strong></span>`:''}
+    </div>
+    <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px">
+      <div style="height:100%;width:${pct}%;background:${cfg.accent};border-radius:3px;transition:width .4s"></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);text-align:right">${pct}% complete</div>
+  </div>`;
+
+  // Columns
+  const renderCol=(colTasks,status)=>{
+    const st=WORK_STATUS_LABELS[status];
+    if(colTasks.length===0&&status==='done')return'';
+    return`<div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${st.color}">${st.label} <span style="background:${st.bg};padding:2px 8px;border-radius:10px;font-size:11px">${colTasks.length}</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${colTasks.length===0?`<div style="text-align:center;padding:12px;color:var(--muted);font-size:13px">Nothing here yet.</div>`:colTasks.sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0)||(a.due||'zz').localeCompare(b.due||'zz')).map(t=>{
+          const isOverdue=t.due&&t.due<today()&&t.status!=='done';
+          return`<div style="background:var(--surface2);border:1px solid ${t.priority==='high'?'var(--red)':isOverdue?'#ff525244':'var(--border)'};border-radius:8px;padding:12px 14px;cursor:pointer" onclick="openWorkTask('${sec}','${t.id}')">
+            <div style="display:flex;align-items:flex-start;gap:8px">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.4">${t.priority==='high'?'<span style="color:var(--red);font-size:10px;font-weight:700;margin-right:4px">⚡</span>':''}${esc(t.text)}</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  ${t.tag?`<span style="font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--muted2)">${esc(t.tag)}</span>`:''}
+                  ${t.due?`<span style="font-size:10px;font-weight:600;color:${isOverdue?'var(--red)':'var(--muted)'}">${isOverdue?'⚠️ ':''} Due ${t.due}</span>`:''}
+                </div>
+                ${t.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.notes)}</div>`:''}
+              </div>
+              <div style="display:flex;gap:4px;flex-direction:column">
+                ${WORK_STATUS_ORDER.filter(s=>s!==t.status).map(s=>`<button class="btn btn-ghost" style="font-size:10px;padding:3px 7px;min-height:unset;white-space:nowrap" onclick="event.stopPropagation();moveWorkTask('${t.id}','${s}')">${WORK_STATUS_LABELS[s].label}</button>`).join('')}
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  };
+
+  html+=renderCol(inprog,'inprogress')+renderCol(todo,'todo')+renderCol(done,'done');
+  el.innerHTML=html;
+}
+
+function openWorkTask(sec,id){
+  const cfg=WORK_SECTIONS[sec];
+  document.getElementById('wtm-title').textContent=id?'Edit Task':'New '+cfg.label+' Task';
+  document.getElementById('wtm-id').value=id||'';
+  document.getElementById('wtm-section').value=sec;
+  document.getElementById('wtm-delete-btn').style.display=id?'inline-flex':'none';
+  if(id){
+    const t=(data.workTasks||[]).find(x=>x.id===id);
+    if(!t)return;
+    document.getElementById('wtm-text').value=t.text;
+    document.getElementById('wtm-status').value=t.status;
+    document.getElementById('wtm-priority').value=t.priority||'normal';
+    document.getElementById('wtm-due').value=t.due||'';
+    document.getElementById('wtm-tag').value=t.tag||'';
+    document.getElementById('wtm-notes').value=t.notes||'';
+  }else{
+    document.getElementById('wtm-text').value='';
+    document.getElementById('wtm-status').value='todo';
+    document.getElementById('wtm-priority').value='normal';
+    document.getElementById('wtm-due').value='';
+    document.getElementById('wtm-tag').value='';
+    document.getElementById('wtm-notes').value='';
+  }
+  openModal('work-task-modal');
+  setTimeout(()=>document.getElementById('wtm-text').focus(),100);
+}
+
+function saveWorkTask(){
+  const text=document.getElementById('wtm-text').value.trim();
+  if(!text)return;
+  const id=document.getElementById('wtm-id').value;
+  const sec=document.getElementById('wtm-section').value;
+  const obj={id:id||uid(),section:sec,text,status:document.getElementById('wtm-status').value,priority:document.getElementById('wtm-priority').value,due:document.getElementById('wtm-due').value,tag:document.getElementById('wtm-tag').value,notes:document.getElementById('wtm-notes').value.trim(),createdAt:id?((data.workTasks||[]).find(x=>x.id===id)||{}).createdAt||today():today()};
+  if(!data.workTasks)data.workTasks=[];
+  if(id){const i=data.workTasks.findIndex(x=>x.id===id);if(i>=0)data.workTasks[i]=obj;}
+  else data.workTasks.push(obj);
+  save();closeModal('work-task-modal');renderWorkBoard(sec);
+}
+
+function deleteWorkTask(){
+  const id=document.getElementById('wtm-id').value;
+  const sec=document.getElementById('wtm-section').value;
+  if(!id||!confirm('Delete this task?'))return;
+  data.workTasks=(data.workTasks||[]).filter(x=>x.id!==id);
+  save();closeModal('work-task-modal');renderWorkBoard(sec);
+}
+
+function moveWorkTask(id,newStatus){
+  const t=(data.workTasks||[]).find(x=>x.id===id);
+  if(!t)return;
+  t.status=newStatus;
+  save();renderWorkBoard(t.section);
 }
 
 // ===== BIRTHDAY ALERTS =====
