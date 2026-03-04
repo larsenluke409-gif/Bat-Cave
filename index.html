@@ -731,17 +731,28 @@ label{font-size:12px;color:var(--muted2);margin-bottom:4px;display:block}
       <div><label>Start Time (optional)</label><input id="event-time" type="time"></div>
       <div><label>End Time (optional)</label><input id="event-endtime" type="time"></div>
     </div>
-    <div style="margin-bottom:10px">
-      <label>Color</label>
-      <select id="event-color">
-        <option value="blue">🔵 Blue</option>
-        <option value="gold">🟡 Gold</option>
-        <option value="green">🟢 Green</option>
-        <option value="red">🔴 Red</option>
-        <option value="purple">🟣 Purple</option>
-        <option value="teal">🩵 Teal</option>
-        <option value="orange">🟠 Orange</option>
-      </select>
+    <div class="modal-row">
+      <div>
+        <label>Color</label>
+        <select id="event-color">
+          <option value="blue">🔵 Blue</option>
+          <option value="gold">🟡 Gold</option>
+          <option value="green">🟢 Green</option>
+          <option value="red">🔴 Red</option>
+          <option value="purple">🟣 Purple</option>
+          <option value="teal">🩵 Teal</option>
+          <option value="orange">🟠 Orange</option>
+        </select>
+      </div>
+      <div>
+        <label>Link to Work Section</label>
+        <select id="event-worksec">
+          <option value="">None</option>
+          <option value="cv">🎙 Crew Voice</option>
+          <option value="ls">🌿 Landscaping</option>
+          <option value="ae">🔵 Aerating</option>
+        </select>
+      </div>
     </div>
     <div style="margin-bottom:10px"><label>Notes</label><textarea id="event-notes" style="min-height:60px" placeholder="Optional"></textarea></div>
     <div class="modal-actions">
@@ -1425,6 +1436,7 @@ function openEventModal(id,prefillDate){
     document.getElementById('event-endtime').value=ev.endTime||'';
     document.getElementById('event-category').value=ev.category||'Work';
     document.getElementById('event-color').value=ev.color||'blue';
+    document.getElementById('event-worksec').value=ev.workSection||'';
     document.getElementById('event-notes').value=ev.notes||'';
   }else{
     document.getElementById('event-title').value='';
@@ -1433,6 +1445,7 @@ function openEventModal(id,prefillDate){
     document.getElementById('event-endtime').value='';
     document.getElementById('event-category').value='Work';
     document.getElementById('event-color').value='blue';
+    document.getElementById('event-worksec').value='';
     document.getElementById('event-notes').value='';
   }
   openModal('event-modal');
@@ -1441,17 +1454,21 @@ function saveEvent(){
   const title=document.getElementById('event-title').value.trim();
   if(!title)return;
   const id=document.getElementById('event-id').value;
-  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,endTime:document.getElementById('event-endtime').value,category:document.getElementById('event-category').value,color:document.getElementById('event-color').value,notes:document.getElementById('event-notes').value.trim()};
+  const workSection=document.getElementById('event-worksec').value;
+  const obj={id:id||uid(),title,date:document.getElementById('event-date').value,time:document.getElementById('event-time').value,endTime:document.getElementById('event-endtime').value,category:document.getElementById('event-category').value,color:document.getElementById('event-color').value,workSection,notes:document.getElementById('event-notes').value.trim()};
   if(!data.events)data.events=[];
   if(id){const i=data.events.findIndex(e=>e.id===id);if(i>=0)data.events[i]=obj;}
   else data.events.push(obj);
   save();closeModal('event-modal');renderCalendar();renderHomeSchedule();
+  // Refresh any active work boards
+  ['cv','ls','ae'].forEach(s=>{const el=document.getElementById('work-'+s+'-board');if(el&&el.children.length>0)renderWorkBoard(s);});
 }
 function deleteEvent(){
   const id=document.getElementById('event-id').value;
   if(!id||!confirm('Delete this event?'))return;
   data.events=data.events.filter(e=>e.id!==id);
   save();closeModal('event-modal');renderCalendar();renderHomeSchedule();
+  ['cv','ls','ae'].forEach(s=>{const el=document.getElementById('work-'+s+'-board');if(el&&el.children.length>0)renderWorkBoard(s);});
 }
 
 // ===== DAY PLANNER =====
@@ -2598,6 +2615,32 @@ function renderWorkBoard(sec){
   const pct=total>0?Math.round(doneC/total*100):0;
   const overdue=todo.filter(t=>t.due&&t.due<today()).length;
 
+  // Calendar events linked to this section
+  const linkedEvents=(data.events||[]).filter(e=>e.workSection===sec).sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''));
+  const upcomingEvents=linkedEvents.filter(e=>e.date>=today());
+  const pastEvents=linkedEvents.filter(e=>e.date<today());
+  const colorMap={blue:'#448aff',gold:'#FFB300',green:'#4CAF50',red:'#ff5252',purple:'#ce93d8',teal:'#00e5c0',orange:'#ff8c3a'};
+  let evHtml='';
+  if(linkedEvents.length>0){
+    evHtml=`<div class="card">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${cfg.accent};margin-bottom:12px">📅 Scheduled Events <span style="background:${cfg.accent}22;padding:2px 8px;border-radius:10px;font-size:11px">${linkedEvents.length}</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${(upcomingEvents.length>0?upcomingEvents:pastEvents.slice(-3)).map(e=>{
+          const isPast=e.date<today();
+          const accentColor=colorMap[e.color]||cfg.accent;
+          const timeStr=e.time?fmtTime12(e.time)+(e.endTime?' – '+fmtTime12(e.endTime):''):'All day';
+          return`<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid ${accentColor};border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;opacity:${isPast?'.5':'1'};cursor:pointer" onclick="openEventModal('${e.id}')">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600">${isPast?'<span style="font-size:10px;color:var(--muted);margin-right:4px">[Past]</span>':''}${esc(e.title)}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">${e.date} · ${timeStr}${e.notes?` · ${esc(e.notes.substring(0,40))}${e.notes.length>40?'…':''}`:''}</div>
+            </div>
+          </div>`;
+        }).join('')}
+        ${upcomingEvents.length===0&&pastEvents.length>3?`<div style="font-size:11px;color:var(--muted);text-align:center">+${pastEvents.length-3} older events</div>`:''}
+      </div>
+    </div>`;
+  }
+
   // Summary bar
   let html=`<div class="card" style="margin-bottom:0">
     <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-bottom:12px">
@@ -2644,7 +2687,7 @@ function renderWorkBoard(sec){
     </div>`;
   };
 
-  html+=renderCol(inprog,'inprogress')+renderCol(todo,'todo')+renderCol(done,'done');
+  html+=evHtml+renderCol(inprog,'inprogress')+renderCol(todo,'todo')+renderCol(done,'done');
   el.innerHTML=html;
 }
 
